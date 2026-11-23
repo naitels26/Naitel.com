@@ -1,0 +1,6 @@
+const fs=require('fs');let s=fs.readFileSync('scene.js','utf8');s=s.replace('this.objects.push({group,equipment',`const ring=new THREE.Mesh(new THREE.RingGeometry(1.2,1.27,64),new THREE.MeshBasicMaterial({color:0x29b6f6,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.y=.07;group.add(ring);
+      const spot=new THREE.SpotLight(0x29b6f6,0,18,Math.PI/7,.65,1);spot.position.set(0,10,0);spot.target=equipment;group.add(spot);
+      this.objects.push({ring,spot,group,equipment`);
+s=s.replace('const dim=o.focus.dim,mix=o.focus.mix;',`const dim=o.focus.dim,mix=o.focus.mix;o.ring.material.opacity=mix*(this.reduced?.6:.45+Math.sin(t*2)*.2);o.ring.scale.setScalar(1+mix*.3);o.spot.intensity=mix*35;if(mix>.1)o.halo.material.opacity=mix*.6;`);
+fs.writeFileSync('scene.js',s);
+let a=fs.readFileSync('app.js','utf8');a=a.replace("$('.hero-heading').inert=true;selected=index;", "$('.hero-heading').inert=true;selected=index;document.documentElement.style.setProperty('--service-tint',['#29b6f6','#57cbb8','#ed9b34','#26bbd4','#577cdb','#8768c7','#e56b43','#4d9aaf'][index]);");a=a.replace("$('.hero-heading').inert=false;document.body", "$('.hero-heading').inert=false;document.documentElement.style.removeProperty('--service-tint');document.body");fs.writeFileSync('app.js',a);

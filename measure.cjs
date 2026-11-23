@@ -1,0 +1,2 @@
+const fs=require('fs');let a=fs.readFileSync('app.js','utf8').replace("performance.mark('naitel-first-frame');","performance.mark('naitel-first-frame');document.documentElement.dataset.firstFrameMs=Math.round(performance.now());");fs.writeFileSync('app.js',a);
+let s=fs.readFileSync('scene.js','utf8').replace('this.measuredFPS=fps;','this.measuredFPS=fps;document.documentElement.dataset.sampleFps=fps.toFixed(1);');s=s.replace('if(index>=0&&!mobile){','if(index<0&&mobile)yMax=.25;\n    if(index>=0&&!mobile){');fs.writeFileSync('scene.js',s);

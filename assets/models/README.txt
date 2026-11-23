@@ -1,0 +1,1 @@
+Coloca aquí modelos GLB y asigna modelUrl en content.js. Carga diferida con Three.js r170, Draco y KTX2 locales. El cargador centra el modelo y normaliza su altura a 2.6 unidades. Materiales y texturas deben tener permisos de uso. El modelo procedural permanece si falla la descarga.

@@ -1,0 +1,1 @@
+const https=require('https');fetch('https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=Genetec%20logo%20filetype:bitmap&gsrnamespace=6&gsrlimit=5&prop=imageinfo&iiprop=url&format=json').then(r=>r.text()).then(console.log).catch(console.error);

@@ -1,0 +1,171 @@
+{
+  "Genetec": {
+    "page": "https://www.genetec.com",
+    "url": "https://www.genetec.com/binaries/content/gallery/genetecweb/ie/genetec_logo.svg",
+    "file": "genetec.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Hoffman": {
+    "page": "https://www.nvent.com/en-us/hoffman",
+    "url": "https://www.nvent.com/themes/custom/particle/dist/app-drupal/assets/images/logo-hoffman.svg",
+    "file": "hoffman.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "AMD": {
+    "page": "https://www.amd.com/en.html",
+    "url": "https://www.amd.com/content/dam/code/images/header/amd-header-logo.svg",
+    "file": "amd.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "SanDisk": {
+    "page": "https://www.sandisk.com",
+    "url": "https://www.sandisk.com/content/dam/store/en-us/assets/home-page/brand-logos/sandisk/sandisk-logo-white.svg",
+    "file": "sandisk.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Honeywell": {
+    "page": "https://www.honeywell.com/us/en",
+    "url": "https://www.honeywell.com/content/dam/honcorp/us-en/common-assets/logos/hon-honeywell-technologies-logo-full-horizontal.svg",
+    "file": "honeywell.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "CyberPower": {
+    "page": "https://www.cyberpower.com/global/en",
+    "url": "https://www.cyberpower.com/images/logo_cyberpower_20170718.svg",
+    "file": "cyberpower.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "HUAWEI": {
+    "page": "https://www.huawei.com/en",
+    "url": "https://www.huawei.com/-/media/hcomponent-header/1.0.1.20260908162100/component/img/huawei_logo.png",
+    "file": "huawei.png",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Lenovo": {
+    "page": "https://www.lenovo.com/us/en/",
+    "url": "https://p3-ofp.static.pub/fes/cms/2023/03/22/8hjmcte754uauw07ypikjkjtx0m5ib450914.svg",
+    "file": "lenovo.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "QNAP": {
+    "page": "https://www.qnap.com/en-us",
+    "url": "https://www.qnap.com/assets/img/header/2025/qnap-logo.svg",
+    "file": "qnap.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Synology": {
+    "page": "https://www.synology.com/en-ca/company/branding",
+    "url": "https://fileres.synology.com/images/www/company/branding/Synology_logo_Standard.zip",
+    "archiveEntry": "Synology_logo_Standard/Synology_logo_Standard.png",
+    "file": "synology.svg",
+    "retrieved": "2026-11-23",
+    "note": "SVG viewport trims empty canvas margins around the exact official PNG; image pixels are embedded unchanged."
+  },
+  "H3C": {
+    "page": "https://www.h3c.com/en/",
+    "url": "https://www.h3c.com/en/tres/NewWebUI/2025/images/new/highly-logo.png",
+    "file": "h3c.png",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "ASUS": {
+    "page": "https://www.asus.com/us/",
+    "url": "https://www.asus.com/media/img/2017/images/n-logo-asus.svg",
+    "file": "asus.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Azure": {
+    "page": "https://commons.wikimedia.org/wiki/File:Microsoft_Azure.svg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg",
+    "file": "azure.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Microsoft": {
+    "page": "https://www.microsoft.com/en-us/",
+    "url": "https://uhf.microsoft.com/images/microsoft/RE1Mu3b.png",
+    "file": "microsoft.png",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "AWS": {
+    "page": "https://commons.wikimedia.org/wiki/File:Amazon_Web_Services_2025.svg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Amazon_Web_Services_2025.svg",
+    "file": "aws.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "CPI": {
+    "page": "https://www.chatsworth.com/en-us/",
+    "url": "https://assets-us-01.kc-usercontent.com:443/76e9b063-b735-0064-0f38-c80e7ad813bb/5ecdf88d-3a4f-4826-8a56-3d8f315f98c0/cpi_logo.BbpggA4C.svg",
+    "file": "cpi.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "HPE": {
+    "page": "https://www.hpe.com/us/en/home.html",
+    "url": "https://www.hpe.com/us/en/home.html#header-official-inline-svg",
+    "file": "hpe.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Aruba": {
+    "page": "https://www.arubanetworks.com/techdocs/central/latest/content/home.htm",
+    "url": "https://www.arubanetworks.com/techdocs/central/latest/content/common%20files/graphics/hpe_aruba_orange_pos_rgb.png",
+    "file": "aruba.png",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Belden": {
+    "page": "https://www.belden.com",
+    "url": "https://cdn.cookielaw.org/logos/e26032f5-4dfb-405d-8e4b-19c55c409721/79dad5c3-c578-4b39-aee8-819ab6d16e5b/10d40ca2-b532-40b4-bced-1ebe763878ac/BeldenPortalLogo_New.png",
+    "file": "belden.png",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "CommScope": {
+    "page": "https://www.commscope.com",
+    "url": "https://webresources.commscope.com/images/assets/CS_Amphenol_Color_RGB/Zz1lMmUyZjM1MmViZDQxMWYwYWRmZWEyYmFlMjc4NDJiZQ==",
+    "file": "commscope.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Panduit": {
+    "page": "https://www.panduit.com",
+    "url": "https://www.panduit.com/content/dam/panduit/logos/Panduit%20Logo%20Desktop%20header.svg",
+    "file": "panduit.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Logitech": {
+    "page": "https://www.logitech.com/en-us",
+    "url": "https://www.logitech.com/content/dam/logitech/en/nav/brand-logos/logitech.svg",
+    "file": "logitech.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Samsung": {
+    "page": "https://www.samsung.com/us/",
+    "url": "https://www.samsung.com/us/#header-official-inline-svg",
+    "file": "samsung.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original downloaded artwork; logo paths and pixels were not redrawn."
+  },
+  "Rittal": {
+    "page": "https://commons.wikimedia.org/wiki/File:Rittal-Logo_2010.svg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Rittal-Logo_2010.svg",
+    "file": "rittal.svg",
+    "retrieved": "2026-11-23",
+    "note": "Original SVG paths preserved; viewBox removes empty outer margins for the compact carousel."
+  }
+}

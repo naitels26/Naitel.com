@@ -1,0 +1,21 @@
+.env
+.env.*
+!.env.example
+private/requests/
+private/
+
+# Local logs, backups, export archives, and visual QA artifacts.
+*.log
+.review-backup/
+.qa-*/
+*.zip
+*.tgz
+preview*.png
+preview*.jpg
+qa-*.json
+
+# Local tooling and dependencies.
+node_modules/
+.aws/
+.codex/
+.agents/

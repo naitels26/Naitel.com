@@ -1,0 +1,21 @@
+const fs=require('node:fs');let s=fs.readFileSync('scene.js','utf8');
+s="import { enrichService, animateServiceDetails } from './scene-details.js';\n"+s;
+s=s.replace('this.objects=[];this.paths=[];','this.objects=[];this.paths=[];this.pickables=[];');
+s=s.replace('builders[i](equipment,anim,s);','builders[i](equipment,anim,s);enrichService(i,equipment,anim,{THREE,M,box,cylinder,sphere,pipe,rod,SPACING});');
+s=s.replace('[[8.2,3.2,4.8],[1.3,2.9,3.2],[3.1,2.6,4.4],[7,.65,1.2],[2.8,2.9,1.8],[3.5,3.7,2.1],[3.7,2.9,2.5],[3.4,2.5,1.8]]','[[8.2,3.2,5.2],[6.5,3.1,4.4],[10,3,5.5],[7,.65,2.4],[9,6.2,6],[5,3.8,4.4],[3.7,3.1,2.5],[7,3.6,4.8]]');
+s=s.replace('new THREE.Vector3(0,i===3?3.35:dimensions[1]/2,0)','new THREE.Vector3(i===1?1.8:i===2?3.3:i===4?1.1:0,i===3?3.35:dimensions[1]/2,i===2?-.8:0)');
+s=s.replaceAll('Math.min(size.y+.18,3.5)','size.y+.18').replaceAll('Math.min(size.y+.3,3.6)','size.y+.3');
+s=s.replace('const materials=new Map();equipment.traverse(mesh=>{if(!mesh.isMesh)return;','const materials=new Map();equipment.traverse(mesh=>{if(!mesh.isMesh)return;mesh.userData.service=i;this.pickables.push(mesh);');
+s=s.replace('const point=new THREE.Vector3(services[i].label','animateServiceDetails(o,t,this.selected===i||this.camera.position.distanceTo(o.base)<27);\n      const point=new THREE.Vector3(services[i].label');
+s=s.replaceAll('this.raycaster.intersectObjects(this.objects.map(o=>o.hit))[0]','this.raycaster.intersectObjects(this.pickables.filter(m=>m.visible&&m.parent.visible))[0]||this.raycaster.intersectObjects(this.objects.map(o=>o.hit))[0]');
+s=s.replace("this.renderer.domElement.style.cursor=index>=0?'pointer':'default';","for(const p of this.paths)gsap.to(p.mesh.material,{emissiveIntensity:index>=0&&p.owner===index?2.1:(p.baseGlow??.45),duration:.5,ease:'power2.out',overwrite:true});this.renderer.domElement.style.cursor=index>=0?'pointer':'default';");
+s=s.replaceAll('1.275','1.6575');
+s=s.replace('let xMin=-.94,xMax=.94,yMin=-.88,yMax=.88;','let xMin=-.95,xMax=mobile?.76:.87,yMin=-.95,yMax=.95;');
+s=s.replace("if(index>=0&&!mobile){xMin=-.95;xMax=.20;yMin=-.88;yMax=.88;}","if(index>=0&&!mobile){xMin=-.95;xMax=.12;yMin=-.92;yMax=.92;}");
+s=s.replace("if(index>=0&&mobile){","if(index>=0&&mobile){\n      xMax=.72;");
+s=s.replace("    this.container.dataset.frame=JSON.stringify({distance,center:center.toArray(),target:target.toArray(),points:points.length,aspect:this.camera.aspect});\n",'');
+const start=s.indexOf('  buildConnections(){'),end=s.indexOf('  buildParticles(){',start);
+const routes="  buildConnections(){\n    const mdf=services[4].position;\n    for(const [owner,service] of services.entries()){\n      const target=service.position;const points=[[mdf[0],mdf[1]],[-9.3,mdf[1]],[-9.3,target[1]],[target[0],target[1]]];\n      const p=pipe(this.platform,points.map(([x,z])=>[x*SPACING,.065,z*SPACING]),.018,material('#29b6f6',{emissive:'#29b6f6',emissiveIntensity:.45}));\n      const dot=sphere(this.platform,.045,0,0,0,M.cyan);this.paths.push({...p,dot,phase:owner*.13,owner,baseGlow:.45});\n    }\n    for(const [owner,o] of this.objects.entries())for(const p of o.anim.fibers){const dot=sphere(o.equipment,.045,0,0,0,M.cyan);dot.userData.base=dot.position.clone();dot.userData.explode=new THREE.Vector3();this.paths.push({...p,dot,phase:Math.random(),owner,baseGlow:p.mesh.material.emissiveIntensity});}\n  }\n";
+s=s.slice(0,start)+routes+s.slice(end);
+fs.writeFileSync('scene.js',s);
+

@@ -1,0 +1,1 @@
+const fs=require('node:fs');let s=fs.readFileSync('index.html','utf8').replace('<dialog id="privacy-dialog"','<div class="privacy-scrim" hidden aria-hidden="true"></div><dialog aria-modal="true" id="privacy-dialog"');fs.writeFileSync('index.html',s);
