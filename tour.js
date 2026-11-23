@@ -22,7 +22,7 @@ export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareServ
   }
   const playback=new TourPlayback({
     count:stops.length,
-    move(step,done){const {index,...options}=stops[step];return getScene().select(index,{...options,tour:true,duration:1.6,onComplete:()=>{done();update();showService();}});},
+    move(step,done){const {index,...options}=stops[step];return getScene().select(index,{...options,tour:true,duration:2,onComplete:()=>{done();update();showService();}});},
     onStep(index){
       prepareService(stops[index].index);getScene().objects.forEach((o,i)=>o.label.classList.toggle('tour-hotspot',i===stops[index].index));
       update();

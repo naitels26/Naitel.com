@@ -1,6 +1,6 @@
 // Playback timing is independent of rendering so pauses preserve the remaining dwell.
 export class TourPlayback {
-  constructor({count=8,dwell=4000,move,onStep,onPause,onFinish,clock=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),unschedule=id=>clearTimeout(id)}){
+  constructor({count=8,dwell=5000,move,onStep,onPause,onFinish,clock=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),unschedule=id=>clearTimeout(id)}){
     Object.assign(this,{count,dwell,move,onStep,onPause,onFinish,clock,schedule,unschedule});
     this.active=false;this.paused=false;this.index=0;this.revision=0;
   }

@@ -151,7 +151,7 @@ function openService(index,{catalog=false,zone=false}={}){
   // The production hall presents cabling, so every stop remains a service.
   if(zone&&index===7)index=3;
   routeStep=routeStops.findIndex(stop=>stop.index===index);
-  const cameraOptions={production:routeStops[routeStep]?.production,duration:1.6};
+  const cameraOptions={production:routeStops[routeStep]?.production,duration:2};
   if(!catalog)catalogSelection=null;
   if(tour?.active){tour.pause();return;}
   if(tour?.complete)tour.close({focus:false});
