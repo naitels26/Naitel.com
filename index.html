@@ -5,7 +5,7 @@
 <meta name="description" content="Explore eight NAITEL technology infrastructure solutions in an interactive 3D site.">
 <title>NAITEL — Infrastructure solutions</title>
 <link rel="icon" type="image/png" href="assets/naitel-official.png">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('naitel-theme')==='dark'?'dark':'light';}catch{}</script><link rel="stylesheet" href="styles.css"><script src="vendor/gsap.min.js" defer></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="app.js"></script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('naitel-theme')==='dark'?'dark':'light';}catch{}</script><link rel="stylesheet" href="styles.css"><script src="vendor/gsap.min.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="app.js"></script>
 <meta property="og:title" content="Naitel | Redes e infraestructura"><meta property="og:description" content="Consultoría, ingeniería, integración y soporte para tus proyectos de TI."><meta property="og:type" content="website"><meta property="og:image" content="assets/naitel-official.png"><link rel="preload" href="assets/d3-euronism/D3Euronism.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="assets/naitel-official.png" as="image"></head>
 <body>
 <a class="skip-link" href="#accessible-services" data-i18n="skip">Skip to services</a>
@@ -36,7 +36,6 @@
 
 <div class="panel-navigation"><button id="prev-service" data-i18n-aria="previous" aria-label="Previous service">←</button><span class="mono"><span id="current-number">01</span> / 08</span><button id="next-service" data-i18n-aria="next" aria-label="Next service">→</button></div>
 </aside>
-<section id="tour-card" class="tour-card" aria-live="polite" aria-atomic="true" hidden><span id="tour-number" class="tour-number"></span><div><h2 id="tour-title"></h2><p id="tour-description"></p></div></section>
 <nav id="tour-controls" class="tour-controls" data-i18n-aria="tourControls" aria-label="Tour controls" hidden>
 <button id="tour-previous" type="button" data-i18n-aria="previous" aria-label="Previous service">‹</button>
 <button id="tour-pause" type="button" aria-pressed="false">Pause</button>

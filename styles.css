@@ -757,6 +757,17 @@ body{grid-template-rows:46px minmax(0,1fr)}
 @media(min-width:701px){body.detail-open[data-focus-service=fiber] .detail-panel{max-height:calc(100% - 28px)}}
 @media(max-width:700px){.detail-panel{max-height:calc(100% - 74px)}}
 
+/* Guided stops share the integrated solution panel and keep playback controls clear. */
+body.tour-active .detail-panel{bottom:auto;max-height:calc(100% - 90px)}
+@media(min-width:701px){
+  body.tour-active[data-focus-service=fiber] .detail-panel{top:14px;bottom:auto;max-height:calc(100% - 90px)}
+  body.tour-active.detail-open .chat-button{right:20px;bottom:94px}
+}
+@media(max-width:700px){
+  body.tour-active .detail-panel{top:auto;bottom:76px;max-height:50%}
+  body.tour-active.detail-open .chat-button{bottom:calc(var(--focus-sheet-height,260px) + 190px);right:16px}
+}
+
 /* Lower the introductory card and align both theme glyphs in the same box. */
 .hero-heading{top:auto;bottom:40px;max-height:calc(100% - 64px)}
 .header .header-actions .theme-button{display:flex;align-items:center;justify-content:center;padding:0;line-height:1;flex-shrink:0}

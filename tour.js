@@ -1,14 +1,14 @@
-import {services,serviceRoute,panelSummaries} from './content.js';
+import {serviceRoute} from './content.js';
 import {TourPlayback} from './tour-playback.mjs';
 
-export function initializeTour({getScene,isReady,isReduced,t,getLanguage,prepare}){
-  const $=s=>document.querySelector(s),start=$('#explore-solutions'),card=$('#tour-card'),controls=$('#tour-controls'),ending=$('#tour-ending');
+export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareService,showService,hideService}){
+  const $=s=>document.querySelector(s),start=$('#explore-solutions'),controls=$('#tour-controls'),ending=$('#tour-ending');
   const hiddenUI=[...document.querySelectorAll('.hero-heading,.service-navigation,.scene-tools')];
   let previousFocus,uiState=[],dragStart=null,returnFlight;
   const stops=serviceRoute;
   const animate=element=>{gsap.killTweensOf(element);gsap.fromTo(element,{opacity:0,y:12},{opacity:1,y:0,duration:isReduced()?0:.35,ease:'power2.out'});};
   function restore(){
-    document.body.classList.remove('tour-active','tour-paused');card.hidden=true;controls.hidden=true;
+    document.body.classList.remove('tour-active','tour-paused');hideService();controls.hidden=true;
     hiddenUI.forEach((element,i)=>element.inert=uiState[i]??false);
     getScene()?.objects.forEach(o=>o.label.classList.remove('tour-hotspot'));
   }
@@ -22,9 +22,9 @@ export function initializeTour({getScene,isReady,isReduced,t,getLanguage,prepare
   }
   const playback=new TourPlayback({
     count:stops.length,
-    move(step,done){const {index,...options}=stops[step];return getScene().select(index,{...options,tour:true,duration:1.6,onComplete:()=>{done();update();animate(card);}});},
+    move(step,done){const {index,...options}=stops[step];return getScene().select(index,{...options,tour:true,duration:1.6,onComplete:()=>{done();update();showService();}});},
     onStep(index){
-      card.hidden=true;getScene().objects.forEach((o,i)=>o.label.classList.toggle('tour-hotspot',i===stops[index].index));
+      prepareService(stops[index].index);getScene().objects.forEach((o,i)=>o.label.classList.toggle('tour-hotspot',i===stops[index].index));
       update();
     },
     onPause(){update();},
@@ -33,9 +33,6 @@ export function initializeTour({getScene,isReady,isReduced,t,getLanguage,prepare
     }
   });
   function update(){
-    const es=getLanguage()==='es',stop=stops[playback.index],s=services[stop.index];
-    $('#tour-number').textContent=String(playback.index+1).padStart(2,'0');
-    $('#tour-title').textContent=es?s.name:s.en;$('#tour-description').textContent=panelSummaries[s.id][es?0:1];
     $('#tour-count').textContent=`${playback.index+1} / ${stops.length}`;
     $('#tour-progress').max=stops.length;
     $('#tour-progress').value=playback.index+1;
@@ -45,7 +42,6 @@ export function initializeTour({getScene,isReady,isReduced,t,getLanguage,prepare
     $('#tour-previous').disabled=playback.index===0;
     $('#tour-next').disabled=playback.index===stops.length-1;
     document.body.classList.toggle('tour-paused',playback.active&&playback.paused);
-    if(playback.active&&playback.phase==='dwelling')card.hidden=false;
   }
   function begin(){
     if(!isReady()||!getScene())return;
@@ -82,5 +78,5 @@ export function initializeTour({getScene,isReady,isReduced,t,getLanguage,prepare
   window.addEventListener('naitel:chat-open',()=>playback.pause());
   document.querySelectorAll('[data-open-contact],#privacy-link').forEach(button=>button.addEventListener('click',()=>playback.pause()));
   $('.header-logo').addEventListener('click',()=>{if(playback.active||!ending.hidden)close({focus:false});});
-  return {update,close,pause:()=>playback.pause(),get active(){return playback.active;},get complete(){return !ending.hidden;},ready(){start.disabled=!getScene();}};
+  return {update,close,pause:()=>playback.pause(),previous:()=>playback.previous(),next:()=>{if(playback.index<stops.length-1)playback.next();},get active(){return playback.active;},get complete(){return !ending.hidden;},ready(){start.disabled=!getScene();}};
 }

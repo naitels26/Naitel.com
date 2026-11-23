@@ -605,8 +605,7 @@ export class InfrastructureScene {
       const visible=Math.max(115,Math.min(stage.height,innerHeight-sheet-stage.top-14));
       yMin=1-2*visible/stage.height;yMax=.9;
     }
-    // The tour uses the whole stage, reserving only its compact lower card.
-    if(index>=0&&tour){xMin=mobile?-.85:-.8;xMax=mobile?.85:.8;yMin=mobile?-.25:-.45;yMax=.86;}
+    // Guided stops reserve the same space for the integrated solution panel.
     const cx=(xMin+xMax)/2,cy=(yMin+yMax)/2,fov=index<0?OVERVIEW.fov:40;
     const candidate=new THREE.PerspectiveCamera(fov,this.camera.aspect,.1,600);candidate.zoom=this.camera.zoom;
     let distance=index<0?25/OVERVIEW.scale:9,position,target;

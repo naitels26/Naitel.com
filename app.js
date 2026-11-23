@@ -15,7 +15,7 @@ let chatOpen=false,pending=false,chatService=null;
 const panel=$('.detail-panel'),chat=$('#chat-widget');
 new ResizeObserver(()=>{
   document.body.style.setProperty('--focus-sheet-height',panel.offsetHeight+'px');
-  if(selected>=0)scene?.resize();
+  if(selected>=0&&!tour?.active)scene?.resize();
 }).observe(panel);
 const number=i=>String(i+1).padStart(2,'0');
 const t=key=>translations[key]?.[language==='es'?0:1]||key;
@@ -28,7 +28,7 @@ let tour;
 let catalogSelection=null;
 const routeStops=serviceRoute;
 let routeStep=0;
-function navigateRoute(delta){const last=routeStops.length-1,next=selected<0?(delta>0?0:last):Math.max(0,Math.min(last,routeStep+delta));if(selected>=0&&next===routeStep)return;openService(routeStops[next].index);}
+function navigateRoute(delta){if(tour?.active){delta>0?tour.next():tour.previous();return;}const last=routeStops.length-1,next=selected<0?(delta>0?0:last):Math.max(0,Math.min(last,routeStep+delta));if(selected>=0&&next===routeStep)return;openService(routeStops[next].index);}
 const solutionToggle=$('#solutions-toggle'), solutionList=$('#solutions-list');
 function closeSolutions(focus=false){solutionList.hidden=true;solutionToggle.setAttribute('aria-expanded','false');if(focus)solutionToggle.focus();}
 function renderSolutions(){solutionList.replaceChildren(...catalogServices.map(entry=>{const b=document.createElement('button');b.type='button';b.textContent=language==='es'?entry.name:entry.en;b.addEventListener('click',()=>{if(!introFinished)return;closeSolutions();if(tour?.active)tour.close({focus:false});catalogSelection=entry;openService(entry.target,{catalog:true});fillPanel(entry.target);});return b;}));}
@@ -105,12 +105,23 @@ function setLoadProgress(value){
   $('#load-number').textContent=String(progress).padStart(2,'0');
   $('.load-line i').style.transform='scaleX('+progress/100+')';
 }
+// Optional assets and GPU initialization must not hold the whole page behind the loader.
+async function waitForStartup(task,timeout){
+  let timer;
+  try{return await Promise.race([Promise.resolve(task).then(()=>true),new Promise(resolve=>{timer=setTimeout(()=>resolve(false),timeout);})]);}
+  finally{clearTimeout(timer);}
+}
 async function intro(){
   const overlay=$('.intro');let skipped=false,assembly;
   const started=performance.now();
   const skip=()=>{skipped=true;assembly?.progress(1);};
   overlay?.addEventListener('click',skip);document.addEventListener('keydown',skip,{once:true});
-  await sceneReady;setLoadProgress(100);
+  const ready=await waitForStartup(sceneReady,15000);
+  if(ready)setLoadProgress(100);
+  else{
+    $('.scene-fallback').hidden=false;
+    console.warn('3D startup is taking too long; opening the page while it finishes.');
+  }
   if(!reduced&&!skipped)await new Promise(resolve=>setTimeout(resolve,Math.max(0,1500-(performance.now()-started))));
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   typeTitle(false);
@@ -169,6 +180,7 @@ function openService(index,{catalog=false,zone=false}={}){
   }
 }
 function closeService({focus=true}={}){
+  if(tour?.active){tour.close({focus});return;}
   if(selected<0)return;catalogSelection=null;selected=-1;delete document.body.dataset.focusService;panelTimeline?.kill();gsap.killTweensOf(panel);
   $('.hero-heading').inert=false;document.documentElement.style.removeProperty('--service-tint');document.body.classList.remove('detail-open');scene?.select(-1);
   updateServiceNavigation(-1);switchVideo(config.ambientVideo);
@@ -312,7 +324,28 @@ $('#chat-form').addEventListener('submit',async e=>{
 /* 09 — Arranque diferido; las fuentes y el render inicial preceden al ensamblaje. */
 // An optional feature must not prevent the core page from starting.
 import('./tour.js').then(({initializeTour})=>{
-  tour=initializeTour({getScene:()=>scene,isReady:()=>introFinished&&sceneStable,isReduced:()=>reduced,t,getLanguage:()=>language,prepare:()=>closeService({focus:false})});
+  tour=initializeTour({getScene:()=>scene,isReady:()=>introFinished&&sceneStable,isReduced:()=>reduced,t,prepare:()=>closeService({focus:false}),
+    prepareService(index){
+      if(panel.contains(document.activeElement))$('#tour-pause').focus({preventScroll:true});
+      panelTimeline?.kill();gsap.killTweensOf(panel);gsap.killTweensOf(panel.querySelectorAll('*'));
+      catalogSelection=null;selected=index;routeStep=routeStops.findIndex(stop=>stop.index===index);
+      document.body.dataset.focusService=services[index].id;document.body.classList.add('detail-open');
+      panel.inert=true;panel.setAttribute('aria-hidden','true');
+      gsap.set(panel,{visibility:'hidden',opacity:0,xPercent:0,yPercent:0,y:0});
+      gsap.set($$('.detail-number,#detail-title,.detail-description,.detail-features,.detail-features li,.quote-button,.panel-navigation',panel),{opacity:1,y:0});
+      fillPanel(index);panel.scrollTop=0;
+    },
+    showService(){
+      panel.inert=false;panel.setAttribute('aria-hidden','false');gsap.set(panel,{visibility:'visible'});
+      gsap.fromTo(panel,{opacity:0,y:12},{opacity:1,y:0,duration:reduced?0:.35,ease:'power2.out'});
+    },
+    hideService(){
+      gsap.killTweensOf(panel);selected=-1;catalogSelection=null;
+      delete document.body.dataset.focusService;document.body.classList.remove('detail-open');
+      panel.inert=true;panel.setAttribute('aria-hidden','true');gsap.set(panel,{visibility:'hidden',opacity:0,y:0});
+      updateServiceNavigation(-1);
+    }
+  });
   tour.update();if(sceneStable)tour.ready();
 }).catch(error=>{
   $('#explore-solutions').disabled=false;
@@ -324,14 +357,18 @@ gsap.set(chat,{visibility:'hidden',opacity:0});setLanguage('en',{animate:false})
 const sceneReady=(async()=>{
   setLoadProgress(2);
   await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
-  await document.fonts.load('16px "Euronism D3"').catch(()=>{});
+  await waitForStartup(document.fonts.load('16px "Euronism D3"').catch(()=>{}),1200);
   setLoadProgress(6);return import('./scene.js');
 })().then(async m=>{
   try{
     scene=await m.InfrastructureScene.create($('#scene'),{onSelect:openService,reduced,onProgress:setLoadProgress});
     scene.paused=paused;scene.reduced=reduced||paused;
     if(document.documentElement.dataset.theme==='dark')scene.setTheme(true);
-    setLanguage(language,{animate:false});performance.mark('naitel-first-frame');return scene;
+    $('.scene-fallback').hidden=true;
+    setLanguage(language,{animate:false});performance.mark('naitel-first-frame');
+    // A slow scene can become available after the loader has already released the page.
+    if(introFinished){tour?.ready();applyMotionPreference();scene.startDeferred().catch(error=>console.warn('Deferred scene',error));}
+    return scene;
   }catch(error){console.warn('3D scene unavailable:',error);$('.scene-fallback').hidden=false;return null;}
 }).catch(error=>{console.warn('3D scene unavailable:',error);$('.scene-fallback').hidden=false;return null;});
 intro();
