@@ -1,5 +1,9 @@
 # NAITEL — Prototipo actualizado
 
+## Menú Soluciones con ocho estaciones (24/11/2026)
+
+El menú Solutions/Soluciones muestra únicamente las ocho estaciones del modelo 3D, en el mismo orden del recorrido: CCTV y accesos, Desarrollo de software, Racks y pasillos, Switches y routers, Climatización de precisión, Energía crítica, Supresión con agente limpio y Cableado y fibra. Comparte los nombres ES/EN y la selección con el explorador 3D; cada opción abre el panel del servicio correspondiente. Esta actualización sustituye las referencias históricas al menú de 24 entradas.
+
 ## Preparar una copia desde GitHub
 
 El repositorio público excluye `.env` y la carpeta `private/`. Antes de ejecutar una copia nueva, copia `.env.example` a `.env`, configura las credenciales y transfiere por un medio privado el archivo `private/assistant-catalog.txt` desde la instalación original. El catálogo es necesario para las respuestas del asistente. Conserva `private/requests/` en almacenamiento persistente del servidor; no subas solicitudes de clientes al repositorio.

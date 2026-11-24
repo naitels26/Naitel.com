@@ -1,4 +1,3 @@
-import {catalogServices} from './content.js';
 import {brandImage} from './brands.js';
 import { initializeNetworkUI, updateNetworkUI, openPrivacy } from './network-ui.js';
 import { applyBrandTypography, observeBrandTypography } from './brand.js';
@@ -25,13 +24,12 @@ const descriptionFor=s=>language==='es'?s.description:s.descriptionEn;
 const messages=[{kind:'greeting'}];
 let updateContact=()=>{};
 let tour;
-let catalogSelection=null;
 const routeStops=serviceRoute;
 let routeStep=0;
 function navigateRoute(delta){if(tour?.active){delta>0?tour.next():tour.previous();return;}const last=routeStops.length-1,next=selected<0?(delta>0?0:last):Math.max(0,Math.min(last,routeStep+delta));if(selected>=0&&next===routeStep)return;openService(routeStops[next].index);}
 const solutionToggle=$('#solutions-toggle'), solutionList=$('#solutions-list');
 function closeSolutions(focus=false){solutionList.hidden=true;solutionToggle.setAttribute('aria-expanded','false');if(focus)solutionToggle.focus();}
-function renderSolutions(){solutionList.replaceChildren(...catalogServices.map(entry=>{const b=document.createElement('button');b.type='button';b.textContent=language==='es'?entry.name:entry.en;b.addEventListener('click',()=>{if(!introFinished)return;closeSolutions();if(tour?.active)tour.close({focus:false});catalogSelection=entry;openService(entry.target,{catalog:true});fillPanel(entry.target);});return b;}));}
+function renderSolutions(){solutionList.replaceChildren(...routeStops.map(({index})=>{const b=document.createElement('button');b.type='button';b.textContent=serviceName(services[index]);b.addEventListener('click',()=>{if(!introFinished)return;closeSolutions();if(tour?.active)tour.close({focus:false});openService(index);});return b;}));}
 solutionToggle.addEventListener('click',()=>{const open=solutionList.hidden;solutionList.hidden=!open;solutionToggle.setAttribute('aria-expanded',String(open));});
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('.solutions-menu'))closeSolutions();});
 document.addEventListener('keydown',e=>{if(solutionList.hidden)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeSolutions(true);}if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();const buttons=$$('button',solutionList),i=buttons.indexOf(document.activeElement);buttons[e.key==='Home'?0:e.key==='End'?buttons.length-1:(i+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length].focus();}},true);
@@ -135,7 +133,6 @@ async function intro(){
 
 /* 04 — Misma cámara curva y panel; ahora con contenido breve y salida al chat. */
 function fillPanel(index){
-  $('.detail-features').hidden=Boolean(catalogSelection);
   const s=services[index];$('.detail-number').textContent=number(routeStep);$('#current-number').textContent=number(routeStep);updateServiceNavigation();
   $('#detail-title').textContent=serviceName(s);$('.detail-description').textContent=panelSummaries[s.id][language==='es'?0:1];
   $('.detail-features').replaceChildren(...featuresFor(s).slice(0,3).map(f=>{const li=document.createElement('li');li.textContent=f;return li;}));
@@ -143,16 +140,14 @@ function fillPanel(index){
   $('.service-tags').replaceChildren(...featuresFor(s).map(text=>{const el=document.createElement('span');el.textContent=text;return el;}));
   const names=[['CPI','Rittal','Hoffman'],['Rittal','Hoffman','Honeywell'],['CyberPower','Honeywell','Rittal'],['Panduit','CommScope','Belden'],['HPE','Aruba','H3C'],['Genetec','Honeywell'],['Honeywell'],['Azure','Microsoft','AWS']][index];
   $('.service-brands').replaceChildren(...names.map(brandImage));
-  if(catalogSelection){$('#detail-title').textContent=language==='es'?catalogSelection.name:catalogSelection.en;$('.detail-description').textContent=language==='es'?catalogSelection.summary:catalogSelection.summaryEn;panel.setAttribute('aria-label',$('#detail-title').textContent);}
   panel.classList.remove('panel-loading');void panel.offsetWidth;panel.classList.add('panel-loading');
 
 }
-function openService(index,{catalog=false,zone=false}={}){
+function openService(index,{zone=false}={}){
   // The production hall presents cabling, so every stop remains a service.
   if(zone&&index===7)index=3;
   routeStep=routeStops.findIndex(stop=>stop.index===index);
   const cameraOptions={production:routeStops[routeStep]?.production,duration:2};
-  if(!catalog)catalogSelection=null;
   if(tour?.active){tour.pause();return;}
   if(tour?.complete)tour.close({focus:false});
   if(!introFinished)return;
@@ -181,7 +176,7 @@ function openService(index,{catalog=false,zone=false}={}){
 }
 function closeService({focus=true}={}){
   if(tour?.active){tour.close({focus});return;}
-  if(selected<0)return;catalogSelection=null;selected=-1;delete document.body.dataset.focusService;panelTimeline?.kill();gsap.killTweensOf(panel);
+  if(selected<0)return;selected=-1;delete document.body.dataset.focusService;panelTimeline?.kill();gsap.killTweensOf(panel);
   $('.hero-heading').inert=false;document.documentElement.style.removeProperty('--service-tint');document.body.classList.remove('detail-open');scene?.select(-1);
   updateServiceNavigation(-1);switchVideo(config.ambientVideo);
   panel.inert=true;panel.setAttribute('aria-hidden','true');
@@ -328,7 +323,7 @@ import('./tour.js').then(({initializeTour})=>{
     prepareService(index){
       if(panel.contains(document.activeElement))$('#tour-pause').focus({preventScroll:true});
       panelTimeline?.kill();gsap.killTweensOf(panel);gsap.killTweensOf(panel.querySelectorAll('*'));
-      catalogSelection=null;selected=index;routeStep=routeStops.findIndex(stop=>stop.index===index);
+      selected=index;routeStep=routeStops.findIndex(stop=>stop.index===index);
       document.body.dataset.focusService=services[index].id;document.body.classList.add('detail-open');
       panel.inert=true;panel.setAttribute('aria-hidden','true');
       gsap.set(panel,{visibility:'hidden',opacity:0,xPercent:0,yPercent:0,y:0});
@@ -340,7 +335,7 @@ import('./tour.js').then(({initializeTour})=>{
       gsap.fromTo(panel,{opacity:0,y:12},{opacity:1,y:0,duration:reduced?0:.35,ease:'power2.out'});
     },
     hideService(){
-      gsap.killTweensOf(panel);selected=-1;catalogSelection=null;
+      gsap.killTweensOf(panel);selected=-1;
       delete document.body.dataset.focusService;document.body.classList.remove('detail-open');
       panel.inert=true;panel.setAttribute('aria-hidden','true');gsap.set(panel,{visibility:'hidden',opacity:0,y:0});
       updateServiceNavigation(-1);
