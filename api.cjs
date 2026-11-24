@@ -7,6 +7,11 @@ const {geminiRequest}=require('./gemini-request.cjs');
 function json(res,status,data){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}).end(JSON.stringify(data));}
 async function readBody(req){
   if(!/^application\/json\b/i.test(req.headers['content-type']||''))throw {status:415};
+  // Vercel parses JSON before invoking a Node function; the local server uses a stream.
+  if(req.body!==undefined){
+    if(Buffer.byteLength(JSON.stringify(req.body)??'')>24000)throw {status:413};
+    return req.body;
+  }
   let size=0,chunks=[];
   for await(const chunk of req){size+=chunk.length;if(size>24000)throw {status:413};chunks.push(chunk);}
   try{return JSON.parse(Buffer.concat(chunks));}catch{throw {status:400};}
@@ -15,7 +20,16 @@ function createApi(options={}){
   const key=(options.key??process.env.GEMINI_API_KEY??'').trim(),request=options.fetchImpl||fetch;
   const dataDir=options.dataDir||path.join(__dirname,'private','requests');
   const mailer=options.mailer||createContactMailer();
-  const catalog=fs.readFile(path.join(__dirname,'private','assistant-catalog.txt'),'utf8');
+  // Loaded only when needed, so a missing catalogue cannot crash status requests.
+  let catalog;
+  const catalogPath=options.catalogPath||path.join(__dirname,'private','assistant-catalog.txt');
+  async function loadCatalog(){
+    try{return await fs.readFile(catalogPath,'utf8');}
+    catch(error){
+      if(error.code!=='ENOENT'||options.catalogPath)throw error;
+      return fs.readFile(path.join(__dirname,'server-data','assistant-catalog.txt'),'utf8');
+    }
+  }
   const limits=new Map();let model=process.env.GEMINI_MODEL||'',modelPromise;
   async function getModel(){
     if(model)return model;
@@ -32,7 +46,7 @@ function createApi(options={}){
   }
   return async(req,res,pathname)=>{
     try{
-      if(pathname==='/api/status'&&req.method==='GET')return json(res,200,{chatConfigured:Boolean(key),contactAvailable:true,contactEmailConfigured:mailer.configured});
+      if(pathname==='/api/status'&&req.method==='GET')return json(res,200,{chatConfigured:Boolean(key),contactAvailable:options.contactAvailable!==false,contactEmailConfigured:mailer.configured});
       if(req.method!=='POST')return json(res,405,{error:'METHOD_NOT_ALLOWED'});
       if(req.headers.origin && ![`http://${req.headers.host}`,`https://${req.headers.host}`].includes(req.headers.origin))return json(res,403,{error:'ORIGIN_REJECTED'});
       const now=Date.now();for(const [id,b] of limits)if(b.until<now)limits.delete(id);
@@ -68,7 +82,7 @@ function createApi(options={}){
         while(contents.length&&contents[0].role!=='user')contents.shift();
         contents.push({role:'user',parts:[{text:data.message}]});
         const modelName=await getModel();
-        const source=await catalog;
+        const source=await(catalog??=loadCatalog());
         const selectedService=serviceContext(data.serviceId,source);
         const deadline=Date.now()+43000;
         async function generate(rules,input,schema){

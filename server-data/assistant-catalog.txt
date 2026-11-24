@@ -1,0 +1,252 @@
+NAITEL — Servicios publicados en la página. No prometer precios, fechas, certificaciones ni capacidades adicionales. El alcance se confirma con el equipo comercial.
+
+02. Consultoría e ingeniería de centros de datos / Data center consulting & engineering
+Diseño, modernización y operación de salas de telecomunicaciones, cuartos de equipo, edge rooms y centros de datos empresariales.
+Planning and integration of data center architecture, capacity and infrastructure.
+
+03. Climatización de precisión y gestión térmica / Precision cooling & thermal management
+Sistemas CRAC, CRAH, unidades InRow, expansión directa (DX), agua helada, condensación remota, enfriamiento sensible, free-cooling viable y monitoreo térmico para infraestructura TI.
+Precision cooling, airflow and environmental monitoring for critical infrastructure.
+
+04. Contención de pasillo frío y caliente / Hot & cold aisle containment
+Integración de puertas, panelería, techos modulares, barreras, cepillos, blanking panels, gabinetes, controles de acceso a pasillo y coordinación con incendios para separar corrientes de aire y reducir recirculación y mezcla.
+Hot and cold aisle containment, coordinated with cooling and fire protection.
+
+05. Piso falso, bases y obra complementaria / Raised floors & complementary works
+Diseño e implementación de piso técnico elevado para distribución de aire o canalizaciones, con opciones de paneles antiestáticos, pedestales, travesaños, recubrimientos y soluciones de carga específicas.
+Raised floors, structural supports and complementary installation works.
+
+06. Gabinetes, racks, pdus y accesorios / Cabinets, racks, PDUs & accessories
+Suministro y montaje de gabinetes para servidores, telecomunicaciones, networking y edge, abiertos/cerrados, profundidad y capacidad definidas, puertas perforadas, bandejas, organizadores, paneles ciegos, sensores y distribución eléctrica en rack.
+Server and network cabinets, rack power distribution and accessories.
+
+07. Protección contra incendio con agentes limpios / Clean agent fire protection
+Soluciones de detección temprana, alarma, control y supresión mediante agente limpio para recintos tecnológicos donde sea aplicable.
+Early detection, alarms and engineered clean agent suppression.
+
+08. Sistemas de energía crítica y calidad de energía / Critical power & power quality
+Diseño, integración y mantenimiento de UPS, tableros, circuitos, ATS, bypass de mantenimiento, banco de baterías, monitoreo, supresión de sobretensiones, puesta a tierra y coordinación de protecciones para TI y operación esencial.
+UPS, batteries, electrical distribution and power quality systems.
+
+09. Plantas de emergencia y transferencia / Generators & transfer systems
+Ingeniería y coordinación para generadores diésel, gas u otras tecnologías, tableros ATS, distribución de emergencia y supervisión remota; dimensionamiento conforme a cargas críticas, picos de arranque, secuencia de entrada y condiciones ambientales.
+Backup generators and transfer systems coordinated with critical loads.
+
+10. Cableado estructurado de cobre / Structured copper cabling
+Planeación, ingeniería, instalación y certificación de enlaces de datos para redes empresariales, industriales y telecom, categorías 6 y 6A, para puestos, AP Wi-Fi, cámaras IP, control de accesos, telefonía y equipos OT cuando corresponda.
+Design, installation, organization and testing of copper cabling.
+
+11. Fibra óptica interna y externa / Indoor & outdoor fiber optics
+Infraestructura multimodo OM3/OM4/OM5 cuando tenga sentido, monomodo OS2 y conectividad MPO/MTP, LC y otras interfaces autorizadas; enlaces troncales MDF-IDF, backbone campus, data center, plantas internas y externas.
+Indoor and outdoor fiber links, routing, termination and documentation.
+
+12. Redes lan, campus, data center y sd-wan / LAN, campus, data center & SD-WAN
+Diseño e integración de switching L2/L3, segmentación VLAN, enlaces 1/10/25/40/100GbE cuando aplicables, enrutamiento, redundancia, QoS, multicast, NAC e interconexión de sedes.
+Segmented enterprise networks, switching, routing and site connectivity.
+
+13. Ciberseguridad, firewalls y acceso seguro / Cybersecurity, firewalls & secure access
+Fortinet/FortiGate, Palo Alto, Cisco y ecosistemas compatibles para seguridad perimetral, microsegmentación, VPN, filtrado web/DNS, seguridad de aplicaciones, IDS/IPS, MFA, ZTNA/SASE según licenciamiento y arquitectura.
+Firewalls, network protection and secure access according to project requirements.
+
+14. Cctv y videovigilancia ip / CCTV & IP video surveillance
+Soluciones de diseño, modernización y soporte para videovigilancia IP, VMS, grabación, almacenamiento, analítica y operación.
+IP cameras, video management, recording and coverage planning.
+
+15. Control de accesos, identidad física e intrusión / Access control, physical identity & intrusion
+Diseño, instalación y mantenimiento de control de accesos para puertas, torniquetes, esclusas, casetas y áreas restringidas, usando plataformas LenelS2, Honeywell y Rosslare según compatibilidad/modelo; posibilidad de integración VMS/alarma cuando se valide API y licencias.
+Access readers, vehicle barriers, physical identity and intrusion detection.
+
+16. Sistemas especiales e integración / Special systems & integration
+Integración controlada de detección de intrusión, alarmas, sensores ambientales, comunicaciones de emergencia, voceo industrial, interfonía, BMS, supervisión de incendios y sistemas electrónicos complementarios.
+Integration of special systems with the production facility infrastructure.
+
+17. Servidores, almacenamiento e hiperconvergencia / Servers, storage & hyperconvergence
+Diseño y suministro de soluciones rack/tower/blade y almacenamiento local/SAN/NAS, virtualización y plataformas hiperconvergentes de Dell Technologies, HPE, Lenovo, Cisco y Nutanix donde oferta, compatibilidad y licencias lo permitan.
+Server, storage and hyperconverged platforms sized for business workloads.
+
+18. Respaldos, recuperación y continuidad / Backup, recovery & continuity
+Políticas de respaldo de servidores, VMs, bases de datos, archivos, SaaS y configuraciones de red, más recuperación ante desastre.
+Backup and recovery solutions based on continuity requirements.
+
+19. Licenciamiento y productividad empresarial / Enterprise licensing & productivity
+Asesoría de licenciamiento, suministro y administración de soluciones Microsoft y Autodesk, así como Minitab u otras plataformas cuando se validen contratos de distribución y productos autorizados.
+Enterprise software licensing and productivity platforms.
+
+20. Soporte de cómputo personal y mesa de ayuda / Desktop support & service desk
+Soporte preventivo/correctivo de estaciones de trabajo, portátiles, periféricos, impresoras, sistemas operativos y herramientas de colaboración, con gestión de activos, tickets, SLA y control de evidencia.
+Desktop support and service desk coverage defined for each project.
+
+21. Servicios administrados y pólizas / Managed services & maintenance
+Contratos de gestión continua para CCTV, energía, UPS, infraestructura, centros de datos, redes, seguridad y sistemas especiales.
+Preventive and corrective maintenance with agreed service coverage.
+
+22. Monitoreo, dcim, telemetría y reportería / Monitoring, DCIM, telemetry & reporting
+Centralización de alarmas de infraestructura con SNMP, APIs, syslog, Modbus/BACnet y herramientas de monitoreo/visualización compatibles, incluyendo paneles Grafana/Prometheus o soluciones DCIM empresariales según proyecto.
+Infrastructure alarms, telemetry and operational dashboards.
+
+23. Gestión de proyectos y aseguramiento de calidad / Project management & quality assurance
+Gobierno integral del ciclo de implementación bajo criterios de alcance, tiempo, costo, riesgo, calidad, seguridad y comunicación.
+Project planning, multidisciplinary coordination and quality assurance.
+
+24. Normatividad, reglamentación y buenas prácticas / Standards, regulations & best practices
+Las normas citadas son un mapa de consulta, no una declaración indiscriminada de cumplimiento o obligatoriedad.
+Technical reference review according to project scope and local requirements.
+
+software. Desarrollo de software a medida / Custom software development
+ERP, CRM y aplicaciones de checklist para revisiones CTPAT, con módulos e integraciones definidos por proyecto.
+Custom ERP, CRM and CTPAT checklist applications, with project-specific modules and integrations.
+
+CATEGORÍAS OFICIALES
+
+Conectividad e infraestructura / Connectivity & Infrastructure
+Conectividad empresarial desde el diseño de red hasta su implementación.
+Business connectivity from network design through implementation.
+Cableado estructurado / Structured Cabling
+Fibra óptica / Fiber Optics
+Redes inalámbricas / Wireless Networks
+Diseño e implementación de redes / Network Design & Implementation
+Infraestructura de telecomunicaciones / Telecommunications Infrastructure
+
+Ciberseguridad y redes OT / Cybersecurity & OT Networks
+Segmentación y conectividad segura para redes empresariales e industriales.
+Segmentation and secure connectivity for enterprise and industrial networks.
+Segmentación de redes industriales / Industrial Network Segmentation
+Segmentación de redes empresariales / Enterprise Network Segmentation
+Integración de firewalls / Firewall Integration
+Conectividad segura / Secure Connectivity
+Continuidad operativa / Operational Continuity
+La segmentación y las medidas de seguridad se definen según la red y los requerimientos de operación.
+Segmentation and security measures are defined according to the network and operational requirements.
+
+Protección de activos y seguridad física / Asset Protection & Physical Security
+Videovigilancia y control de acceso para proteger tus instalaciones.
+Surveillance and access control to protect your facilities.
+Videovigilancia CCTV / CCTV Surveillance
+Control de acceso / Access Control
+Integración de plataformas de video / Video Platform Integration
+Analítica de video / Video Analytics
+
+Energía crítica / Critical Power
+Respaldo energético e infraestructura para la operación esencial.
+Power backup and infrastructure for essential operations.
+Sistemas UPS / UPS Systems
+Generadores de emergencia / Emergency Power Generators
+Infraestructura de energía crítica / Critical Power Infrastructure
+
+Centros de datos / Data Centers
+Ingeniería e integración de infraestructura para centros de datos.
+Infrastructure engineering and integration for data centers.
+Energía crítica / Critical Power
+Climatización de precisión / Precision Cooling
+Infraestructura de telecomunicaciones / Telecommunications Infrastructure
+Monitoreo de infraestructura / Infrastructure Monitoring
+
+Desarrollo de software / Software Development
+Software e integración para optimizar procesos y automatizar tareas.
+Software and integration to optimize processes and automate tasks.
+Optimización de procesos de negocio / Business Process Optimization
+Desarrollo de software a medida / Custom Software Development
+Integración de sistemas / Systems Integration
+Automatización de tareas / Task Automation
+La arquitectura y el alcance se definen según los requerimientos del cliente.
+Architecture and scope are defined according to the client’s requirements.
+
+Ingeniería y gestión integral de proyectos / Engineering & Integrated Project Management
+Acompañamiento técnico desde la ingeniería conceptual hasta la implementación.
+Technical guidance from conceptual engineering through implementation.
+Ingeniería conceptual / Conceptual Engineering
+Selección de tecnología / Technology Selection
+Suministro de tecnología / Technology Supply
+Coordinación técnica / Technical Coordination
+Implementación del proyecto / Project Implementation
+
+Consultoría comercial / Commercial Consulting
+Evaluación técnica personalizada para orientar los requerimientos de tu proyecto.
+Personalized technical assessment to guide your project requirements.
+Evaluación técnica personalizada / Personalized Technical Assessment
+Consultoría técnica / Technical Consulting
+Solicitud de consultoría / Consultation Request
+El diagnóstico técnico inicial no tiene costo. Su confirmación depende del equipo comercial.
+The initial technical assessment is free of charge. Confirmation depends on the commercial team.
+
+EQUIPAMIENTO DEL RECORRIDO
+
+Racks y pasillos / Racks & aisles
+Gabinetes, contención y distribución según tu carga.
+Cabinets, containment and layouts built around your load.
+Gabinetes y PDUs
+Pasillos frío y caliente
+Piso técnico y contención
+Cabinets and PDUs
+Cold and hot aisles
+Raised floors and containment
+
+Climatización de precisión / Precision cooling
+Control térmico y flujo de aire para tu infraestructura crítica.
+Thermal control and airflow for your critical infrastructure.
+Unidades InRow
+Distribución de aire
+Monitoreo ambiental
+InRow units
+Air distribution
+Environmental monitoring
+
+Energía crítica / Critical power
+Respaldo y distribución eléctrica para los equipos esenciales de tu operación.
+Backup power and electrical distribution for your essential equipment.
+Sistemas UPS
+Bancos de baterías
+Distribución eléctrica
+UPS systems
+Battery banks
+Power distribution
+
+Cableado y fibra / Cabling & fiber
+Cobre y fibra, del diseño a la organización y documentación.
+Copper and fiber, from design to organization and documentation.
+Charolas aéreas
+Cobre y fibra óptica
+Organización y documentación
+Overhead cable trays
+Copper and fiber optics
+Organization and documentation
+
+Switches y routers / Switching & routing
+Redes segmentadas y conectividad para los sistemas de tu operación.
+Segmented networks and connectivity for your operational systems.
+Rack de comunicaciones MDF
+Switching y routing
+Patch panels y segmentación
+MDF communications rack
+Switching and routing
+Patch panels and segmentation
+
+CCTV y accesos / CCTV & access
+Visibilidad y control de acceso integrados a tus espacios críticos.
+Visibility and access control integrated into your critical spaces.
+Videovigilancia IP
+Lectores y torniquetes
+Gestión de accesos
+IP video surveillance
+Readers and turnstiles
+Access management
+
+Supresión con agente limpio / Gas suppression
+Detección y supresión con agente limpio para cuartos críticos.
+Clean agent detection and suppression for critical rooms.
+Cilindros de agente limpio
+Tubería y boquillas
+Detección y supervisión
+Clean agent cylinders
+Piping and nozzles
+Detection and supervision
+
+Desarrollo de software / Software
+Herramientas digitales para conectar procesos, información y equipos de trabajo.
+Digital tools connecting processes, information and teams.
+Aplicaciones a medida
+Integraciones ERP y CRM
+Paneles de operación
+Custom applications
+ERP and CRM integrations
+Operations dashboards

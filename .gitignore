@@ -16,6 +16,8 @@ qa-*.json
 
 # Local tooling and dependencies.
 node_modules/
+dist/
+.vercel/
 .aws/
 .codex/
 .agents/

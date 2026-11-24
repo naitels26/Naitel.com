@@ -6,7 +6,7 @@ El menú Solutions/Soluciones muestra únicamente las ocho estaciones del modelo
 
 ## Preparar una copia desde GitHub
 
-El repositorio público excluye `.env` y la carpeta `private/`. Antes de ejecutar una copia nueva, copia `.env.example` a `.env`, configura las credenciales y transfiere por un medio privado el archivo `private/assistant-catalog.txt` desde la instalación original. El catálogo es necesario para las respuestas del asistente. Conserva `private/requests/` en almacenamiento persistente del servidor; no subas solicitudes de clientes al repositorio.
+El repositorio público excluye `.env` y la carpeta `private/`. Antes de ejecutar una copia nueva, copia `.env.example` a `.env` y configura las credenciales. El asistente usa el catálogo privado `private/assistant-catalog.txt` si está disponible; de lo contrario usa el catálogo derivado de los servicios públicos en `server-data/assistant-catalog.txt`. Conserva `private/requests/` en almacenamiento persistente del servidor; no subas solicitudes de clientes al repositorio. Para Vercel, sigue [DEPLOY-VERCEL.md](DEPLOY-VERCEL.md): las funciones de chatbot se publican desde `api/` y la clave se configura en Vercel.
 
 ## Contacto, correo Microsoft 365 y derivación del asistente (23/11/2026)
 
