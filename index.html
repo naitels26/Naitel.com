@@ -6,7 +6,7 @@
 <title>NAITEL — Infrastructure solutions</title>
 <link rel="icon" type="image/png" href="assets/naitel-official.png">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('naitel-theme')==='dark'?'dark':'light';}catch{}</script><link rel="stylesheet" href="styles.css"><script src="vendor/gsap.min.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="app.js"></script>
-<meta property="og:title" content="Naitel | Redes e infraestructura"><meta property="og:description" content="Consultoría, ingeniería, integración y soporte para tus proyectos de TI."><meta property="og:type" content="website"><meta property="og:image" content="assets/naitel-official.png"><link rel="preload" href="assets/d3-euronism/D3Euronism.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="assets/naitel-official.png" as="image"></head>
+<meta property="og:title" content="Naitel | Redes e infraestructura"><meta property="og:description" content="Consultoría, ingeniería, integración y soporte para tus proyectos de TI."><meta property="og:type" content="website"><meta property="og:image" content="assets/naitel-official.png"><link rel="preload" href="assets/d3-euronism/D3Euronism.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="assets/naitel-official.png" as="image"><link rel="stylesheet" href="service-map.css"><link rel="stylesheet" href="assets/ambient-waves.css"></head>
 <body>
 <a class="skip-link" href="#accessible-services" data-i18n="skip">Skip to services</a>
 <div class="intro" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading"><div class="intro-trace intro-trace-before" aria-hidden="true"></div><div class="intro-trace intro-trace-after" aria-hidden="true"></div><svg class="intro-plug" viewBox="0 0 28 22" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 6h12V2h8v4h5v10h-5v4h-8v-4H1z"/><path d="M16 7v8m4-8v8"/></svg><span class="intro-brand"><img src="assets/naitel-mark-white.png" alt=""><span class="brand">Naitel</span><i class="intro-link-led"></i></span><div class="intro-bottom"><span data-i18n="loading">INTEGRATING POSSIBILITIES</span><span id="load-number">00</span></div><div class="load-line"><i></i></div></div>
@@ -23,23 +23,25 @@
 </nav>
 </header>
 <main id="main">
-<div class="video-backdrop" aria-hidden="true"><video muted loop playsinline preload="metadata" poster="assets/ambient.svg"></video><video muted loop playsinline preload="metadata" poster="assets/ambient.svg"></video></div>
+<div class="video-backdrop" aria-hidden="true"><video muted loop playsinline preload="metadata" poster="assets/ambient-waves-poster.jpeg" disablepictureinpicture disableremoteplayback></video><video muted loop playsinline preload="metadata" poster="assets/ambient-waves-poster.jpeg" disablepictureinpicture disableremoteplayback></video></div>
 <section class="experience" data-i18n-aria="experience" aria-label="Interactive solutions explorer">
 <div class="hero-heading"><span class="link-led" aria-hidden="true"></span><h1><span class="title-mask"><span id="typed-title" aria-hidden="true"></span><span class="typing-caret" aria-hidden="true"></span></span></h1><p class="hero-support" data-i18n="heroSupport"></p><div class="hero-actions"><button id="consultation" data-i18n="consultation"></button><button id="explore-solutions" type="button" data-i18n="exploreSolutions" disabled></button></div></div>
 
 <div id="scene" role="region" data-i18n-aria="scene" aria-label="NAITEL 3D infrastructure site"><div id="labels"></div><div class="scene-fallback" hidden><p data-i18n="fallbackTitle">Explore our solutions</p><span data-i18n="fallback">The 3D view is unavailable. Use the eight services below.</span></div></div>
-<div class="scene-tools"><button id="reset-view" data-i18n-aria="reset" aria-label="Reset view">⌖</button></div>
+<div class="scene-tools"><button id="reset-view" data-i18n-aria="reset" aria-label="Reset view">⌖</button><button id="map-motion" type="button" aria-label="Pause ambient motion" aria-pressed="false">Ⅱ</button></div>
+<aside id="success-stories-panel" class="success-stories-panel" role="dialog" aria-modal="false" aria-labelledby="success-stories-title" aria-hidden="true" inert>
+<div class="panel-top"><h2 id="success-stories-title" class="eyebrow" data-i18n="successStories">Success stories</h2><button id="success-stories-close" class="icon-button" type="button" data-i18n-aria="close" aria-label="Close">×</button></div>
+<div id="success-stories-list"></div>
+</aside>
 <div class="link-console" role="status" aria-live="polite"></div><aside class="detail-panel" aria-labelledby="detail-title" aria-hidden="true" inert>
 <div class="panel-top"><span class="eyebrow" data-i18n="solution">INTEGRATED SOLUTION</span><button class="close-panel icon-button" data-i18n-aria="close" aria-label="Close">×</button></div>
-<div class="detail-number" aria-hidden="true">01</div><h2 id="detail-title"></h2><p class="detail-description"></p><ul class="detail-features"></ul>
+<div class="detail-number" aria-hidden="true">01</div><p id="detail-category" class="detail-category"></p><h2 id="detail-title"></h2><p class="detail-description"></p><ul class="detail-features"></ul>
+<p id="detail-note" class="detail-note"></p><div class="card-footer"><div class="service-card-actions"><button id="service-consultation" type="button" data-i18n="consultation">Request a consultation</button></div><nav class="panel-navigation" data-i18n-aria="routeNavigation" aria-label="Route navigation"><button id="prev-service" type="button" data-i18n-aria="previous" aria-label="Previous service">←</button><span class="mono"><span id="current-number">01</span> / 08</span><button id="next-service" type="button" data-i18n-aria="next" aria-label="Next service">→</button></nav></div>
 <div class="commercial-details"><h3 data-i18n="serviceTags"></h3><div class="service-tags"></div><h3 data-i18n="products"></h3><div class="service-brands"></div></div><button class="quote-button magnetic" id="ask-chat"><span data-i18n="quote">Ask in chatbot</span><span>↗</span></button>
 
-<div class="panel-navigation"><button id="prev-service" data-i18n-aria="previous" aria-label="Previous service">←</button><span class="mono"><span id="current-number">01</span> / 08</span><button id="next-service" data-i18n-aria="next" aria-label="Next service">→</button></div>
 </aside>
 <nav id="tour-controls" class="tour-controls" data-i18n-aria="tourControls" aria-label="Tour controls" hidden>
-<button id="tour-previous" type="button" data-i18n-aria="previous" aria-label="Previous service">‹</button>
 <button id="tour-pause" type="button" aria-pressed="false">Pause</button>
-<button id="tour-next" type="button" data-i18n-aria="next" aria-label="Next service">›</button>
 <div class="tour-progress"><span id="tour-count" aria-live="polite">1 / 8</span><progress id="tour-progress" max="8" value="1" data-i18n-aria="tourProgress" aria-label="Tour progress"></progress></div>
 <button id="tour-close" type="button" data-i18n-aria="close" aria-label="Close">×</button>
 </nav>
@@ -49,12 +51,14 @@
 <div><button id="tour-consultation" type="button" data-i18n="consultation">Request a consultation</button><button id="tour-repeat" type="button" data-i18n="tourRepeat">Repeat tour</button></div>
 </section>
 </section>
-<footer class="explorer-footer"><div class="footer-base"><span class="footer-network"><span class="footer-ports" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><button id="privacy-link" data-i18n="privacyNotice">Privacy notice</button></span><span class="prototype-tag" data-i18n="prototype">INTERACTIVE PROTOTYPE</span></div></footer><section class="brands-ribbon" aria-labelledby="brands-title"><p id="brands-title" class="brands-label" data-i18n="brandsTitle">Partners</p><div class="brands-rows"></div></section>
+<footer class="explorer-footer"><div class="footer-base"><button id="success-stories-toggle" class="success-stories-toggle" type="button" aria-controls="success-stories-panel" aria-expanded="false"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 13V8m5 5V5m5 8V2M2 5l4-3 4 1 4-2"/></svg><span data-i18n="successStories">Success stories</span><span class="success-stories-arrow" aria-hidden="true">↗</span></button><span class="footer-network"><span class="footer-ports" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><button id="privacy-link" data-i18n="privacyNotice">Privacy notice</button></span><span class="prototype-tag" data-i18n="prototype">INTERACTIVE PROTOTYPE</span></div></footer>
+<section class="brands-ribbon" aria-labelledby="brands-title"><span id="brands-title" class="sr-only">Partners and certifications</span><div class="ribbon-tabs" role="tablist" aria-label="Partners and certifications"><button type="button" id="ribbon-brands-tab" class="ribbon-tab" role="tab" aria-selected="true" aria-controls="ribbon-brands-panel">Partners</button><button type="button" id="ribbon-certifications-tab" class="ribbon-tab" role="tab" aria-selected="false" aria-controls="ribbon-certifications-panel" tabindex="-1">Certifications</button></div><div id="ribbon-stage" class="brands-rows"></div></section>
 <section id="accessible-services" class="sr-only" data-i18n-aria="allServices" aria-label="All services" tabindex="-1"><h2 data-i18n="accessibleTitle">Technology infrastructure solutions</h2><div id="accessible-content"></div></section>
 </main>
-<button class="chat-button magnetic" id="chat-launcher" aria-controls="chat-widget" aria-expanded="false"><span class="robot" aria-hidden="true"><i class="antenna"></i><span class="robot-face"><i></i><i></i></span><b>✦</b></span><span data-i18n="chat">Assistant</span></button>
+<button class="chat-button" id="chat-launcher" aria-describedby="assistant-move-help" aria-controls="chat-widget" aria-expanded="false" data-i18n-aria="chat" aria-label="Assistant"><span class="assistant-symbol" aria-hidden="true"><img src="assets/naitel-assistant.svg" alt="" width="30" height="30"></span><span data-i18n="chat">Assistant</span><span class="assistant-chevron" aria-hidden="true">↗</span></button>
 <div class="privacy-scrim" hidden aria-hidden="true"></div><dialog aria-modal="true" id="privacy-dialog" aria-labelledby="privacy-title"><div class="privacy-top"><h2 id="privacy-title">Privacy notice</h2><button class="privacy-close icon-button" aria-label="Close">×</button></div><p id="privacy-language-note"></p><div id="privacy-content" tabindex="0"></div></dialog><section id="chat-widget" class="chat-widget" role="dialog" aria-labelledby="chat-title" aria-hidden="true" inert>
-<div class="chat-top"><span class="robot" aria-hidden="true"><i class="antenna"></i><span class="robot-face"><i></i><i></i></span><b>✦</b></span><div><h2 id="chat-title" data-i18n="chatTitle">NAITEL — Let’s talk about your project.</h2></div><button class="icon-button" id="close-chat" data-i18n-aria="close" aria-label="Close">×</button></div>
+<div class="chat-top" tabindex="0" role="group" data-i18n-aria="moveAssistant" aria-label="Drag to move · Alt + arrow keys"><img class="assistant-avatar" src="assets/naitel-assistant.svg" alt="" width="36" height="36"><div><h2 id="chat-title" data-i18n="chatTitle">NAITEL — Let’s talk about your project.</h2></div><button class="icon-button" id="close-chat" data-i18n-aria="close" aria-label="Close">×</button></div>
+<p id="assistant-move-help" class="sr-only" data-i18n="moveAssistant">Drag to move · Alt + arrow keys</p>
 <div class="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
 <p id="chat-status" class="chat-status" role="status"></p>
 <form id="chat-form"><label class="sr-only" for="chat-input" data-i18n="chatMessage">Your message</label><textarea id="chat-input" rows="2" maxlength="2000" required data-i18n-placeholder="chatPlaceholder" placeholder="Type your question…"></textarea><button type="submit" data-i18n-aria="send" aria-label="Send message">↗</button></form>
@@ -62,6 +66,7 @@
 <dialog id="contact-dialog" aria-labelledby="contact-title">
 <div class="contact-heading"><div><span class="eyebrow" data-i18n="contactEyebrow">LET’S CONNECT</span><h2 id="contact-title" data-i18n="contactTitle">Tell us about your project</h2></div><button type="button" class="contact-close icon-button" data-i18n-aria="close" aria-label="Close">×</button></div>
 <p class="contact-description" data-i18n="contactDescription">Share what you need. Let’s find the right solution for your business.</p>
+<p id="contact-service-context" class="contact-service-context" hidden></p>
 <p class="contact-email"><a href="mailto:aleon@naitel.com">aleon@naitel.com</a></p>
 <form id="contact-form"><input type="hidden" name="service" value="consulting"><div class="contact-grid">
 <label><span data-i18n="contactName">Full name *</span><input name="name" autocomplete="name" maxlength="120" required></label>

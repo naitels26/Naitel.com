@@ -1,16 +1,33 @@
 import {brandImage,preloadBrands} from './brands.js';
 /* Cinta de fabricantes y aviso proporcionado por el usuario. Sin llamadas externas. */
 import { config } from './content.js';
+import certifications from './assets/certifications/manifest.js';
 let translate=k=>k,motionReduced=false,privacyFocus;
 const privacy=document.querySelector('#privacy-dialog'),content=document.querySelector('#privacy-content');
 const scrim=document.querySelector('.privacy-scrim');let inertBefore=[];
 const brands=[['Genetec','Hoffman','AMD','SanDisk','Honeywell','CyberPower','HUAWEI','Lenovo','QNAP','Synology','H3C','ASUS'],['Azure','Microsoft','AWS','CPI','HPE','Aruba','Belden','CommScope','Panduit','Logitech','Samsung','Rittal']];
-const colors=['#154e75','#bf3b2b','#111111','#d32030','#c92f26','#1f617f','#d32f35','#c72c30','#155d9c','#667887','#b32b2b','#164e80'];
 const marquees=[];let activePrivacyLanguage='es',privacyCache={};
+let ribbonTimer,activeFace=0,ribbonFaces=[],ribbonFocused=false,ribbonSelected=false,ribbonTabs=[];
+function ribbonLabel(){
+  const es=document.documentElement.lang==='es',labels=es?['Partners','Certificaciones']:['Partners','Certifications'];
+  const title=es?'Partners y certificaciones':'Partners and certifications';
+  document.querySelector('#brands-title').textContent=title;
+  document.querySelector('.ribbon-tabs').setAttribute('aria-label',title);
+  ribbonTabs.forEach((tab,i)=>{tab.textContent=labels[i];tab.setAttribute('aria-selected',String(i===activeFace));tab.tabIndex=i===activeFace?0:-1;});
+}
+function scheduleRibbon(){
+  clearTimeout(ribbonTimer);
+  if(!ribbonSelected&&!motionReduced&&!document.hidden&&!ribbonFocused&&ribbonFaces.length)ribbonTimer=setTimeout(()=>{showRibbonFace(1-activeFace);},6000);
+}
+function showRibbonFace(next){
+  activeFace=next;
+  ribbonFaces.forEach((face,i)=>{face.dataset.active=String(i===next);face.inert=i!==next;face.setAttribute('aria-hidden',String(i!==next));});
+  ribbonLabel();scheduleRibbon();
+}
 export function updateNetworkUI(t,reduced=false,language='en'){
   translate=t;motionReduced=reduced;
   for(const entry of marquees)entry.animation.paused(reduced||document.hidden);
-  document.querySelector('.brands-label').textContent=t('brandsTitle');
+  ribbonLabel();scheduleRibbon();
   document.querySelector('#privacy-title').textContent=t('privacyNotice');
   document.querySelector('#privacy-link').textContent=t('privacyNotice');
   document.querySelector('.privacy-close').setAttribute('aria-label',t('close'));
@@ -18,25 +35,45 @@ export function updateNetworkUI(t,reduced=false,language='en'){
 }
 export async function initializeNetworkUI(){
   preloadBrands();
-  for(const [row,names] of [brands.flat()].entries()){
+  const ribbon=document.querySelector('.brands-ribbon'),stage=document.querySelector('.brands-rows');
+  const selectFace=next=>{ribbonSelected=true;showRibbonFace(next);};
+  ribbonTabs=['#ribbon-brands-tab','#ribbon-certifications-tab'].map(id=>document.querySelector(id));
+  ribbonTabs.forEach((tab,i)=>{
+    tab.addEventListener('click',()=>selectFace(i));
+    tab.addEventListener('keydown',event=>{
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      event.preventDefault();event.stopPropagation();const next=event.key==='Home'?0:event.key==='End'?1:1-i;
+      selectFace(next);ribbonTabs[next].focus({preventScroll:true});
+    });
+  });
+  stage.addEventListener('click',()=>selectFace(1-activeFace));
+  ribbon.addEventListener('focusin',()=>{ribbonFocused=true;clearTimeout(ribbonTimer);});
+  ribbon.addEventListener('focusout',()=>{queueMicrotask(()=>{ribbonFocused=ribbon.contains(document.activeElement);scheduleRibbon();});});
+  for(const [row,names] of [brands.flat(),certifications].entries()){
+    const face=document.createElement('div');face.className='ribbon-face';face.dataset.active=String(row===0);
+    face.id=row?'ribbon-certifications-panel':'ribbon-brands-panel';
+    face.inert=row!==0;face.setAttribute('aria-hidden',String(row!==0));face.setAttribute('role','tabpanel');face.setAttribute('aria-labelledby',ribbonTabs[row].id);
+    ribbonFaces.push(face);
     const viewport=document.createElement('div');viewport.className='brands-row';
     const track=document.createElement('div');track.className='brands-track';
     for(let copy=0;copy<2;copy++){
       const group=document.createElement('div');group.className='brands-group';
       if(copy===1){group.setAttribute('aria-hidden','true');group.inert=true;}
-      for(const name of names){const port=brandImage(name);if(copy===0)port.tabIndex=0;group.append(port);}
+      for(const item of names){const name=typeof item==='string'?item:item.name;const port=brandImage(name,{normalize:true,...(typeof item==='object'?{asset:item}:{})});if(copy===0)port.tabIndex=0;group.append(port);}
       track.append(group);
     }
-    viewport.append(track);document.querySelector('.brands-rows').append(viewport);
+    viewport.append(track);face.append(viewport);stage.append(face);
     // Equal groups include their trailing spacing: -50% is exactly one full cycle.
-    const animation=gsap.fromTo(track,{xPercent:0},{xPercent:-50,duration:84,ease:'none',repeat:-1,paused:motionReduced||document.hidden});
+    const animation=gsap.fromTo(track,{xPercent:0},{xPercent:-50,duration:row?66:84,ease:'none',repeat:-1,paused:motionReduced||document.hidden});
     marquees.push({animation,track});
     const slow=()=>gsap.to(animation,{timeScale:0,duration:.3,ease:'power2.out',overwrite:true});
     const resume=()=>gsap.to(animation,{timeScale:1,duration:1,ease:'power2.out',overwrite:true});
     viewport.addEventListener('pointerenter',slow);viewport.addEventListener('pointerleave',resume);viewport.addEventListener('focusin',slow);viewport.addEventListener('focusout',resume);
   }
+  ribbonLabel();
+  scheduleRibbon();
 }
-document.addEventListener('visibilitychange',()=>{for(const {animation} of marquees)animation.paused(motionReduced||document.hidden);});
+document.addEventListener('visibilitychange',()=>{for(const {animation} of marquees)animation.paused(motionReduced||document.hidden);scheduleRibbon();});
 function paragraph(text){const p=document.createElement('p');p.textContent=text;if(!text.trim())p.className='privacy-empty';return p;}
 export async function loadPrivacy(language='en'){
   const translated=language==='en'&&config.privacy?.en;

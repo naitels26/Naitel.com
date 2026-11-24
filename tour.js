@@ -1,5 +1,6 @@
-import {serviceRoute} from './content.js';
+import {equipmentRoute as serviceRoute} from './content.js';
 import {TourPlayback} from './tour-playback.mjs';
+import {nextRouteStep} from './service-map.js';
 
 export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareService,showService,hideService}){
   const $=s=>document.querySelector(s),start=$('#explore-solutions'),controls=$('#tour-controls'),ending=$('#tour-ending');
@@ -18,13 +19,13 @@ export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareServ
   }
   function close({focus=true}={}){
     playback.stop();ending.hidden=true;restore();home();
-    if(focus)(previousFocus?.isConnected?previousFocus:start).focus({preventScroll:true});
+    if(focus)(previousFocus?.isConnected&&previousFocus.getClientRects().length?previousFocus:$('#solutions-toggle')).focus({preventScroll:true});
   }
   const playback=new TourPlayback({
     count:stops.length,
     move(step,done){const {index,...options}=stops[step];return getScene().select(index,{...options,tour:true,duration:2,onComplete:()=>{done();update();showService();}});},
     onStep(index){
-      prepareService(stops[index].index);getScene().objects.forEach((o,i)=>o.label.classList.toggle('tour-hotspot',i===stops[index].index));
+      prepareService(stops[index].index,stops[index]);getScene().objects.forEach((o,i)=>o.label.classList.toggle('tour-hotspot',i===stops[index].index));
       update();
     },
     onPause(){update();},
@@ -39,8 +40,6 @@ export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareServ
     $('#tour-pause').textContent=t(playback.paused?'tourResume':'tourPause');
     $('#tour-pause').setAttribute('aria-label',t(playback.paused?'tourResume':'tourPause'));
     $('#tour-pause').setAttribute('aria-pressed',String(playback.paused));
-    $('#tour-previous').disabled=playback.index===0;
-    $('#tour-next').disabled=playback.index===stops.length-1;
     document.body.classList.toggle('tour-paused',playback.active&&playback.paused);
   }
   function begin(){
@@ -54,8 +53,7 @@ export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareServ
   }
   start.addEventListener('click',begin);$('#tour-repeat').addEventListener('click',begin);
   $('#tour-pause').addEventListener('click',()=>playback.toggle());
-  $('#tour-previous').addEventListener('click',()=>playback.previous());
-  $('#tour-next').addEventListener('click',()=>playback.next());
+  const navigate=direction=>playback.go(nextRouteStep(playback.index,direction,stops.length),{manual:true});
   $('#tour-close').addEventListener('click',()=>close());$('#tour-ending-close').addEventListener('click',()=>close());
   $('#tour-consultation').addEventListener('click',()=>{close();$('#consultation').click();});
   document.addEventListener('keydown',event=>{
@@ -63,8 +61,8 @@ export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareServ
     if(event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey||event.target.closest('input,textarea,select,[contenteditable=true],dialog,#chat-widget'))return;
     if(event.key==='Escape'){event.preventDefault();close();return;}
     if(!playback.active)return;
-    if(event.key==='ArrowLeft'){event.preventDefault();playback.previous();}
-    if(event.key==='ArrowRight'){event.preventDefault();if(playback.index<stops.length-1)playback.next();}
+    if(event.key==='ArrowLeft'){event.preventDefault();navigate(-1);}
+    if(event.key==='ArrowRight'){event.preventDefault();navigate(1);}
     if(event.code==='Space'){event.preventDefault();playback.toggle();}
   });
   const stage=$('#scene');
@@ -76,7 +74,8 @@ export function initializeTour({getScene,isReady,isReduced,t,prepare,prepareServ
   document.addEventListener('visibilitychange',()=>{if(document.hidden)playback.pause();});
   // Opening an assistant or dialog leaves the current stop available to resume.
   window.addEventListener('naitel:chat-open',()=>playback.pause());
+  window.addEventListener('naitel:contact-open',()=>playback.pause());
   document.querySelectorAll('[data-open-contact],#privacy-link').forEach(button=>button.addEventListener('click',()=>playback.pause()));
   $('.header-logo').addEventListener('click',()=>{if(playback.active||!ending.hidden)close({focus:false});});
-  return {update,close,pause:()=>playback.pause(),previous:()=>playback.previous(),next:()=>{if(playback.index<stops.length-1)playback.next();},get active(){return playback.active;},get complete(){return !ending.hidden;},ready(){start.disabled=!getScene();}};
+  return {update,close,pause:()=>playback.pause(),previous:()=>navigate(-1),next:()=>navigate(1),get active(){return playback.active;},get complete(){return !ending.hidden;},ready(){start.disabled=!getScene();}};
 }

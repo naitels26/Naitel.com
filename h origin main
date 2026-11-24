@@ -1,0 +1,53 @@
+ README.md                                          |  34 [32m+++[m
+ app.js                                             | 224 [32m+++++++++++++[m[31m----[m
+ assets/ambient-waves-poster.jpeg                   | Bin [31m0[m -> [32m40450[m bytes
+ assets/ambient-waves.css                           |  36 [32m+++[m
+ assets/ambient-waves.mp4                           | Bin [31m0[m -> [32m719400[m bytes
+ assets/brands/bosch.svg                            |   1 [32m+[m
+ assets/brands/cisco.svg                            |   1 [32m+[m
+ assets/brands/fortinet.svg                         |   1 [32m+[m
+ assets/brands/kidde.png                            | Bin [31m0[m -> [32m5111[m bytes
+ assets/brands/kidde.svg                            |   1 [32m+[m
+ assets/brands/manifest.js                          |   7 [32m+[m
+ assets/brands/schneiderelectric.svg                |   1 [32m+[m
+ assets/brands/siemens.svg                          |   1 [32m+[m
+ assets/brands/siemon.png                           | Bin [31m0[m -> [32m2993[m bytes
+ assets/cases/cracker-barrel.png                    | Bin [31m0[m -> [32m1196335[m bytes
+ assets/cases/heineken.png                          | Bin [31m0[m -> [32m556630[m bytes
+ assets/cases/sources.json                          |  14 [32m++[m
+ assets/certifications/00-vivotek-200x128.jpeg      | Bin [31m0[m -> [32m4736[m bytes
+ assets/certifications/01-axis-200x128.jpeg         | Bin [31m0[m -> [32m11471[m bytes
+ .../02-Mitsubishi-Electric-200x128.jpeg            | Bin [31m0[m -> [32m4944[m bytes
+ assets/certifications/03-mobotix-200x128.jpeg      | Bin [31m0[m -> [32m5313[m bytes
+ assets/certifications/04-lutron-200x128.jpeg       | Bin [31m0[m -> [32m4203[m bytes
+ assets/certifications/05-grandstream-200x128.jpeg  | Bin [31m0[m -> [32m4420[m bytes
+ assets/certifications/06-belden-200x128.webp       | Bin [31m0[m -> [32m38259[m bytes
+ .../07-Energy-University-200x128.webp              | Bin [31m0[m -> [32m22375[m bytes
+ assets/certifications/08-cisco-1-200x128.jpeg      | Bin [31m0[m -> [32m4650[m bytes
+ .../09-key-business-process-solutions-200x128.jpeg | Bin [31m0[m -> [32m5360[m bytes
+ assets/certifications/10-milestone-200x128.jpeg    | Bin [31m0[m -> [32m4304[m bytes
+ assets/certifications/11-cr-w-155-h-100.webp       | Bin [31m0[m -> [32m9274[m bytes
+ assets/certifications/12-life-is-on-200x128.jpeg   | Bin [31m0[m -> [32m3978[m bytes
+ .../13-panduit-gold-partner-200x128.jpeg           | Bin [31m0[m -> [32m5400[m bytes
+ assets/certifications/14-fike-200x128.jpeg         | Bin [31m0[m -> [32m4432[m bytes
+ assets/certifications/15-siklu-200x128.jpeg        | Bin [31m0[m -> [32m4175[m bytes
+ assets/certifications/16-hanwa-200x128.webp        | Bin [31m0[m -> [32m22658[m bytes
+ assets/certifications/17-LTS-200x128.webp          | Bin [31m0[m -> [32m22978[m bytes
+ assets/certifications/manifest.js                  |  20 [32m++[m
+ assets/certifications/sources.json                 |  92 [32m+++++++[m
+ assets/naitel-assistant.svg                        |  10 [32m+[m
+ brands.js                                          |  43 [32m+++[m[31m-[m
+ contact.js                                         |  12 [32m+[m[31m-[m
+ content.js                                         |  56 [32m++++[m[31m-[m
+ index.html                                         |  25 [32m+[m[31m-[m
+ network-ui.js                                      |  51 [32m+++[m[31m-[m
+ scene.js                                           | 276 [32m+++++++++++++++[m[31m------[m
+ server.cjs                                         |   4 [32m+[m[31m-[m
+ service-map.css                                    |  98 [32m++++++++[m
+ service-map.js                                     |  63 [32m+++++[m
+ service-map.test.mjs                               |  44 [32m++++[m
+ styles.css                                         | 179 [32m+++++++++++++[m
+ tools/generate-ambient-waves.py                    |  62 [32m+++++[m
+ tour-playback.test.mjs                             |  16 [32m+[m[31m-[m
+ tour.js                                            |  19 [32m+[m[31m-[m
+ 52 files changed, 1218 insertions(+), 173 deletions(-)

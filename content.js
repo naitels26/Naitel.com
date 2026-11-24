@@ -1,18 +1,60 @@
 /* Contenido bilingüe. Sin promesas comerciales ni certificaciones. */
-export const config = {logo:'assets/naitel-official.png',ambientVideo:'assets/ambient-sample.mp4',videoOpacity:.12,privacy:{es:"assets/privacy-document-es.json",en:null}};
+export const config = {logo:'assets/naitel-official.png',ambientVideo:'assets/ambient-waves.mp4',videoOpacity:.12,privacy:{es:"assets/privacy-document-es.json",en:null}};
 // La versión oscura conserva el mismo icono y la misma composición en blanco.
 export const services = [
 {id:'data',name:'Racks y pasillos',short:'Racks y pasillos',en:'Racks & aisles',position:[9,-2],label:[-1,2.8,0],description:'Gabinetes, contención y distribución según tu carga.',descriptionEn:'Cabinets, containment and layouts built around your load.',features:['Gabinetes y PDUs','Pasillos frío y caliente','Piso técnico y contención'],featuresEn:['Cabinets and PDUs','Cold and hot aisles','Raised floors and containment']},
 {id:'cooling',name:'Climatización de precisión',short:'Climatización',en:'Precision cooling',position:[16,-2],label:[0,.15,1.9],description:'Control térmico y flujo de aire para tu infraestructura crítica.',descriptionEn:'Thermal control and airflow for your critical infrastructure.',features:['Unidades InRow','Distribución de aire','Monitoreo ambiental'],featuresEn:['InRow units','Air distribution','Environmental monitoring']},
 {id:'power',name:'Energía crítica',short:'Energía crítica',en:'Critical power',position:[16,6],label:[0,.15,1.5],description:'Respaldo y distribución eléctrica para los equipos esenciales de tu operación.',descriptionEn:'Backup power and electrical distribution for your essential equipment.',features:['Sistemas UPS','Bancos de baterías','Distribución eléctrica'],featuresEn:['UPS systems','Battery banks','Power distribution']},
 {id:'fiber',name:'Cableado y fibra',short:'Cableado y fibra',en:'Cabling & fiber',position:[0,-2],label:[0,3.35,0],description:'Cobre y fibra, del diseño a la organización y documentación.',descriptionEn:'Copper and fiber, from design to organization and documentation.',features:['Charolas aéreas','Cobre y fibra óptica','Organización y documentación'],featuresEn:['Overhead cable trays','Copper and fiber optics','Organization and documentation']},
-{id:'network',name:'Switches y routers',short:'Switches y routers',en:'Switches & routers',position:[9,-5],label:[0,.15,1.3],description:'Redes segmentadas y conectividad para los sistemas de tu operación.',descriptionEn:'Segmented networks and connectivity for your operational systems.',features:['Rack de comunicaciones MDF','Switching y routing','Patch panels y segmentación'],featuresEn:['MDF communications rack','Switching and routing','Patch panels and segmentation']},
+{id:'network',name:'Switches y routers',short:'Switches y routers',en:'Switching & routing',position:[9,-5],label:[0,.15,1.3],description:'Redes segmentadas y conectividad para los sistemas de tu operación.',descriptionEn:'Segmented networks and connectivity for your operational systems.',features:['Rack de comunicaciones MDF','Switching y routing','Patch panels y segmentación'],featuresEn:['MDF communications rack','Switching and routing','Patch panels and segmentation']},
 {id:'security',name:'CCTV y accesos',short:'CCTV y accesos',en:'CCTV & access',position:[-3,9],label:[0,.15,1.4],description:'Visibilidad y control de acceso integrados a tus espacios críticos.',descriptionEn:'Visibility and access control integrated into your critical spaces.',features:['Videovigilancia IP','Lectores y torniquetes','Gestión de accesos'],featuresEn:['IP video surveillance','Readers and turnstiles','Access management']},
 {id:'fire',name:'Supresión con agente limpio',short:'Agente limpio',en:'Gas suppression',position:[16,-8],label:[0,.15,2.2],description:'Detección y supresión con agente limpio para cuartos críticos.',descriptionEn:'Clean agent detection and suppression for critical rooms.',features:['Cilindros de agente limpio','Tubería y boquillas','Detección y supervisión'],featuresEn:['Clean agent cylinders','Piping and nozzles','Detection and supervision']},
 {id:'software',name:'Desarrollo de software',short:'Software',en:'Software',position:[-9,-2],label:[0,.15,1.2],description:'Herramientas digitales para conectar procesos, información y equipos de trabajo.',descriptionEn:'Digital tools connecting processes, information and teams.',features:['Aplicaciones a medida','Integraciones ERP y CRM','Paneles de operación'],featuresEn:['Custom applications','ERP and CRM integrations','Operations dashboards']}
 ].map(s=>({video:'',modelUrl:null,...s}));
-// Shared route: access, office, data-center services, then cabling in production.
-export const serviceRoute=[5,7,0,4,1,2,6,3].map(index=>({index,production:index===3}));
+// Solutions retains its category route, independent of the equipment tour.
+export {serviceMapStops as serviceRoute} from './service-map.js';
+// Explore solutions visits each physical equipment marker exactly once.
+// The Solutions menu keeps its separate category route above.
+export const equipmentRoute=[5,7,2,6,3,1,0,4].map((index,step)=>({index,number:step+1,production:false}));
+export const equipmentNumber=index=>equipmentRoute.findIndex(stop=>stop.index===index)+1;
+// Service-specific product brands; the global partner ribbon remains unchanged.
+export const serviceBrands = {
+  data:['CPI','Rittal','Hoffman','Panduit'],
+  cooling:['Rittal','Schneider Electric','Honeywell','Siemens'],
+  power:['CyberPower','Schneider Electric','Rittal','Panduit'],
+  fiber:['Panduit','CommScope','Belden','Siemon'],
+  network:['Cisco','Aruba','HPE','Fortinet','H3C'],
+  security:['Genetec','Honeywell','Bosch','Siemens'],
+  fire:['Honeywell','Siemens','Bosch','Kidde'],
+  software:['Microsoft','Azure','AWS','Cisco','Fortinet']
+};
+// Add future cases here; each card supplies the same ES / EN fields.
+export const successStories = [{
+  id:'heineken-chihuahua-2017',
+  logo:'assets/cases/heineken.png',
+  logoAlt:'Heineken',
+  title:['Heineken – Chihuahua, México (2017)','Heineken – Chihuahua, Mexico (2017)'],
+  summary:['Infraestructura de red para una de las plantas de producción más grandes de Heineken en Latinoamérica, con estándares de tecnología 4.0.',"Network infrastructure for one of Heineken's largest production facilities in Latin America, built to Industry 4.0 standards."],
+  highlights:[
+    ['~64 km de fibra óptica','~40 miles of fiber optic cabling'],
+    ['+17 km de charolas portacables','11+ miles of cable trays'],
+    ['Data centers redundantes con monitoreo inteligente','Redundant data centers with intelligent monitoring'],
+    ['+210,000 horas-hombre','210,000+ man-hours'],
+    ['Resultado: reconocimiento como PANDUIT Gold Partner (2017)','Result: recognized as PANDUIT Gold Partner (2017)']
+  ]
+}, {
+  id:'cracker-barrel-2021',
+  logo:'assets/cases/cracker-barrel.png',
+  logoAlt:'Cracker Barrel Old Country Store',
+  title:['Cracker Barrel – Estados Unidos (2021)','Cracker Barrel – United States (2021)'],
+  summary:['A principios de 2021, Cracker Barrel inició la renovación de su infraestructura de red de Cat 5e a Cat 6. Por su experiencia y conocimientos, NAITEL fue seleccionada entre varios participantes a nivel nacional para ejecutar el proyecto en más de 700 restaurantes de Estados Unidos.','In early 2021, Cracker Barrel launched a nationwide upgrade of its network infrastructure from Cat 5e to Cat 6. Selected among several bidders for its experience and expertise, NAITEL was awarded the project across more than 700 restaurant locations throughout the United States.'],
+  highlights:[
+    ['Instalaciones nocturnas en múltiples estados, con hasta 15 cuadrillas trabajando simultáneamente.','Nightly installations across multiple states, with up to 15 crews working simultaneously.'],
+    ['Al alcanzar el 80% de avance, Cracker Barrel amplió el encargo para renovar el cableado VoIP en más de 300 restaurantes y programar sus sistemas de telefonía Cisco.','At 80% completion, Cracker Barrel expanded the assignment to include VoIP cabling upgrades at 300+ restaurant locations and Cisco phone system programming.'],
+    ['NAITEL incorporó cuadrillas adicionales para ejecutar ambos proyectos en paralelo.','NAITEL added crews to carry out both projects in parallel.'],
+    ['Resultado: ambos proyectos concluidos con éxito antes de finalizar 2021.','Result: both projects successfully completed before the end of 2021.']
+  ]
+}];
 // Short summaries for the compact service panel; full descriptions remain above.
 export const panelSummaries = {
   data:['Gabinetes, contención y distribución eléctrica.','Racks, containment and power distribution.'],
@@ -26,12 +68,16 @@ export const panelSummaries = {
 };
 // Pares ES / EN: textos visibles, accesibilidad y mensajes del chat.
 export const translations = {
+routeOverview:['Vista general','Overview'],routeNavigation:['Navegación del recorrido','Route navigation'],
+mapCategories:['Mapa de servicios','Service map'],learnMore:['Conocer más','Learn more'],equipmentViews:['Explorar equipamiento existente','Explore existing equipment'],pauseMotion:['Pausar movimiento ambiental','Pause ambient motion'],resumeMotion:['Reanudar movimiento ambiental','Resume ambient motion'],
+successStories:['Casos de éxito','Success stories'],
+moveAssistant:['Arrastra para mover · Alt + teclas de flecha','Drag to move · Alt + arrow keys'],
 tourStart:['Ver recorrido','Take the tour'],tourPause:['Pausar','Pause'],tourResume:['Reanudar','Resume'],tourControls:['Controles del recorrido','Tour controls'],tourProgress:['Progreso del recorrido','Tour progress'],tourEnding:['¿Hablamos de tu proyecto?','Shall we discuss your project?'],tourRepeat:['Repetir recorrido','Repeat tour'],
 brandsTitle:['Marcas con las que trabajamos','Brands we work with'],privacyNotice:['Aviso de privacidad','Privacy notice'],privacySpanish:['','Spanish original. An English version can be added here.'],privacyLoading:['Cargando aviso…','Loading notice…'],linkEstablished:['enlace establecido','link established'],
 solutions:['Soluciones','Solutions'],eyebrow:['INFRAESTRUCTURA QUE CONECTA TODO','INFRASTRUCTURE THAT CONNECTS EVERYTHING'],
 caption:['Integramos redes e infraestructura para mantener tu operación conectada.','We integrate networks and infrastructure to keep your operations connected.'],
 prototype:['PROTOTIPO INTERACTIVO','INTERACTIVE PROTOTYPE'],
-solution:['SOLUCIÓN INTEGRADA','INTEGRATED SOLUTION'],quote:['Preguntar en el chatbot','Ask in chatbot'],back:['Volver','Back'],chat:['Assistant','Assistant'],
+solution:['SOLUCIÓN INTEGRADA','INTEGRATED SOLUTION'],quote:['Preguntar en el chatbot','Ask in chatbot'],back:['Volver','Back'],chat:['Asistente','Assistant'],
 loading:['INTEGRANDO POSIBILIDADES','INTEGRATING POSSIBILITIES'],brandDetail:['INFRAESTRUCTURA TECNOLÓGICA','TECHNOLOGY INFRASTRUCTURE'],
 skip:['Ir a los servicios','Skip to services'],home:['NAITEL, volver al inicio','NAITEL, back to overview'],navigation:['Navegación principal','Main navigation'],
 experience:['Explorador interactivo de soluciones','Interactive solutions explorer'],scene:['Site de infraestructura 3D de NAITEL','NAITEL 3D infrastructure site'],

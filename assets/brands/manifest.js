@@ -1,4 +1,11 @@
 export default {
+  "Schneider Electric":{"file":"schneiderelectric.svg","monochrome":true},
+  "Siemens":{"file":"siemens.svg","monochrome":true},
+  "Bosch":{"file":"bosch.svg","monochrome":true},
+  "Cisco":{"file":"cisco.svg","monochrome":true},
+  "Fortinet":{"file":"fortinet.svg","monochrome":true},
+  "Siemon":{"file":"siemon.png"},
+  "Kidde":{"file":"kidde.svg"},
   "Genetec": {
     "file": "genetec.svg",
     "color": "#173d66",

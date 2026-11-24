@@ -5,8 +5,8 @@ const path = require('node:path');
 const root = __dirname;
 try { process.loadEnvFile(path.join(root,'.env')); } catch(error) { if(error.code!=='ENOENT')throw error; }
 const api=require('./api.cjs').createApi();
-const publicFiles=new Set(['index.html','styles.css','app.js','content.js','brand.js','brands.js','cabling.js','scene.js','scene-details.js','model-loader.js','network-ui.js','contact.js','tour.js','tour-playback.mjs']);
-const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.mp4':'video/mp4','.webm':'video/webm','.glb':'model/gltf-binary','.woff2':'font/woff2','.ttf':'font/ttf','.png':'image/png'};
+const publicFiles=new Set(['index.html','styles.css','service-map.css','app.js','content.js','service-map.js','brand.js','brands.js','cabling.js','scene.js','scene-details.js','model-loader.js','network-ui.js','contact.js','tour.js','tour-playback.mjs']);
+const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.mp4':'video/mp4','.webm':'video/webm','.glb':'model/gltf-binary','.woff2':'font/woff2','.ttf':'font/ttf','.png':'image/png','.jpeg':'image/jpeg','.webp':'image/webp'};
 http.createServer((req,res)=>{
   let file;
   try {

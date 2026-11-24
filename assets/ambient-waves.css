@@ -1,0 +1,36 @@
+/* A calm studio backdrop: soft blue ribbons, with a quiet center for the campus. */
+:root{--ambient-video-opacity:.12}
+[data-theme=dark]{--ambient-video-opacity:.22}
+main{background:#c8d7e4}
+main:before{content:none}
+.video-backdrop{
+  z-index:0;pointer-events:none;opacity:1;
+  background:radial-gradient(ellipse at 52% 43%,#eff5fa 0%,#dae5ee 43%,#acc1d3 100%);
+}
+.video-backdrop:before{
+  content:'';position:absolute;inset:0;
+  background:url('ambient-waves-poster.jpeg') center/cover no-repeat;
+  opacity:var(--ambient-video-opacity);transition:opacity 1.4s ease;
+}
+.video-backdrop[data-motion=playing]:before{opacity:0}
+.video-backdrop:after{
+  content:'';position:absolute;inset:0;opacity:1;
+  background:radial-gradient(ellipse at 52% 43%,#f5f9fc33 0%,transparent 48%,#152b4610 100%);
+  pointer-events:none;
+}
+.video-backdrop video{inset:0;width:100%;height:100%;object-fit:cover;filter:none;transform:scale(1.025);transition:opacity 1.4s ease}
+.experience{z-index:1}
+.explorer-footer,.brands-ribbon{z-index:1}
+[data-theme=dark] main{background:#0c192b}
+[data-theme=dark] main:before{content:none}
+[data-theme=dark] .video-backdrop{
+  opacity:1;background:radial-gradient(ellipse at 52% 43%,#334c62 0%,#1b3045 45%,#081422 100%);
+}
+[data-theme=dark] .video-backdrop video,[data-theme=dark] .video-backdrop:before{mix-blend-mode:screen}
+[data-theme=dark] .video-backdrop:after{
+  background:radial-gradient(ellipse at 52% 43%,#77b8d607 0%,transparent 48%,#020a1640 100%);
+}
+@media(prefers-reduced-motion:reduce){
+  .video-backdrop video{display:none!important}
+  .video-backdrop:before{opacity:var(--ambient-video-opacity)!important;transition:none}
+}

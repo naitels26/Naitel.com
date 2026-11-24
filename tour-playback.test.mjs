@@ -1,16 +1,16 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {TourPlayback} from './tour-playback.mjs';
-import {services,serviceRoute} from './content.js';
+import {services,equipmentRoute,equipmentNumber} from './content.js';
 
-test('el recorrido configurado incluye los ocho servicios y presenta cableado en producción',()=>{
- const ids=serviceRoute.map(stop=>services[stop.index]?.id);
+test('Explore solutions visita los ocho equipos en el orden solicitado con números únicos',()=>{
+ const ids=equipmentRoute.map(stop=>services[stop.index]?.id);
  assert.equal(ids.length,8);
- assert.deepEqual([...ids].sort(),services.map(service=>service.id).sort());
- assert.deepEqual(ids.slice(0,3),['security','software','data']);
- const production=serviceRoute.filter(stop=>stop.production);
- assert.equal(production.length,1);
- assert.equal(services[production[0].index].id,'fiber');
+ assert.deepEqual(services.map(service=>service.id),['data','cooling','power','fiber','network','security','fire','software']);
+ assert.deepEqual(ids,['security','software','power','fire','fiber','cooling','data','network']);
+ assert.equal(new Set(equipmentRoute.map(stop=>stop.index)).size,8);
+ assert.deepEqual(equipmentRoute.map(stop=>equipmentNumber(stop.index)),[1,2,3,4,5,6,7,8]);
+ assert.ok(equipmentRoute.every(stop=>stop.production===false));
 });
 function setup(){
  let now=0,id=0,finished=0;const jobs=new Map(),steps=[],flights=[];

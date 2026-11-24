@@ -1,4 +1,5 @@
-import {config} from './content.js';
+import {config,services} from './content.js';
+import {categoryById} from './service-map.js';
 import {renderPrivacyBlocks} from './network-ui.js';
 export function initializeContact({t,getLanguage}){
   const dialog=document.querySelector('#contact-dialog'),form=document.querySelector('#contact-form');
@@ -9,14 +10,15 @@ export function initializeContact({t,getLanguage}){
   form.addEventListener('reset',()=>queueMicrotask(updateSubmit));
   updateSubmit();
   const select=form.elements.service;
-  function open(serviceId){
+  function updateContext(){const category=categoryById(select.value),service=dialog.dataset.contextType==='equipment'?services.find(service=>service.id===select.value):null,context=document.querySelector('#contact-service-context');context.hidden=!category&&!service;context.textContent=service?(getLanguage()==='es'?service.name:service.en):category?.name[getLanguage()==='es'?0:1]||'';}
+  function open(serviceId,contextType='category'){
     previousFocus=document.activeElement;
     if(!sending)document.querySelector('#contact-status').textContent='';
-    if(serviceId)select.value=serviceId;
+    select.value=serviceId||'consulting';dialog.dataset.contextType=contextType;updateContext();
     if(!dialog.open)dialog.show();form.elements.name.focus({preventScroll:true});dialog.scrollTop=0;
   }
   document.querySelectorAll('[data-open-contact]').forEach(button=>button.addEventListener('click',()=>open()));
-  window.addEventListener('naitel:contact-open',event=>open(event.detail?.serviceId));
+  window.addEventListener('naitel:contact-open',event=>open(event.detail?.serviceId,event.detail?.contextType));
   document.querySelector('#consultation').addEventListener('click',()=>open('consulting'));
   dialog.querySelector('.contact-close').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
@@ -49,5 +51,5 @@ export function initializeContact({t,getLanguage}){
     }catch{status.textContent=t('contactError');}
     finally{sending=false;updateSubmit();}
   });
-  return ()=>loadInlinePrivacy();
+  return ()=>{updateContext();loadInlinePrivacy();};
 }

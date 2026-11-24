@@ -185,3 +185,37 @@ Ejecutar desde `C:\Naitel.com\Naitel.com`: `node server.cjs`.
 Se conserva la arquitectura modular sin bundle único. Los detalles existentes siguen construyéndose junto con los objetos; partículas, entorno y postprocesado se difieren. El entorno de reflejos es procedural (RoomEnvironment), no una foto HDRI. Las sombras de contacto son texturas radiales, no AO horneado en Blender. Los logotipos grabados en equipos no se inventan.
 La intro se puede saltar con clic o tecla y se omite durante el resto de la sesión. Su overlay tiene un límite de 1.8 s; el tiempo de construcción de WebGL depende del equipo. Los videos se inician después del primer render y se pausan al ocultarse la pestaña.
 Ver `qa-current.json`: primer render observado aproximadamente 2.1–2.7 s en el navegador integrado. No se ha alcanzado/verificado el objetivo de 60 FPS en ese entorno. Los cinco tamaños comprobados no generaron scroll de página; los paneles conservan scroll interno.
+
+## Mapa de servicios y revisión visual (24/11/2026)
+
+`service-map.js` organiza las ocho categorías del catálogo oficial, sus capacidades ES/EN y el recorrido espacial. Los ocho ejemplos de equipamiento e indicadores originales siguen disponibles en Soluciones → Explorar equipamiento existente. Se agregan únicamente tres indicadores: ingeniería y consultoría en el edificio corporativo, y redes OT en producción. `service-map.css` contiene los estilos de esta capa.
+
+Las tarjetas muestran hasta tres capacidades y dos acciones: Conocer más abre un diálogo sin desplazar la página; Solicitar consultoría abre el formulario con la categoría seleccionada. El diagnóstico inicial gratuito conserva la condición de confirmación comercial. La leyenda permite pausar el movimiento ambiental; se respeta la preferencia de movimiento reducido. El recorrido visita las ocho categorías y conserva pausa, navegación y regreso a la vista general.
+
+La revisión visual elimina la compresión de los títulos, el padding heredado para la numeración y las animaciones individuales que podían superponer los textos. El menú del mapa queda por encima de la tarjeta. El modelo utiliza antialiasing y una resolución de 1.5× a 2×; la adaptación de rendimiento conserva la resolución y el enfoque usa atenuación de materiales, sin desenfoque ni pasadas adicionales. El encuadre móvil reserva el espacio sobre el Hero existente.
+
+Verificación: `node --test service-map.test.mjs tour-playback.test.mjs operation-cycle.test.mjs` (12 pruebas). Las 21 pruebas de API, correo y política del asistente también pasan. Comprobación en navegador: ocho tarjetas sin superposición ni scroll de página en 390 × 844; tarjetas en 1440 × 900 y 637 × 599; ambos idiomas y temas; diálogo ampliado, contexto de consulta, navegación de categorías y recorrido completo con pausa/reanudación. Vistas: `preview-service-map-fixed-desktop.jpg` y `preview-service-map-fixed-mobile.jpg`.
+
+### Recorrido unificado desde el acceso
+
+El orden actual es: acceso y seguridad física → consultoría → ingeniería → redes OT en producción → conectividad → centros de datos → energía crítica → software. Solutions, las flechas, los gestos, la numeración de indicadores y el recorrido guiado usan `serviceMapStops`. La navegación permanece fija fuera de las tarjetas, incluso durante las transiciones y en la vista general; las flechas manuales recorren la secuencia de forma circular. La pausa y el cierre del recorrido tienen controles separados. El chatbot conserva su esquina al explorar cableado.
+
+Verificación: 13 pruebas de catálogo, navegación, reproducción y acceso. Comprobación de las ocho paradas en escritorio y móvil de 390 × 568: mismo orden que Solutions, flechas utilizables durante transiciones, tarjetas completas y controles del recorrido sin superposición.
+
+### Explore solutions: recorrido técnico independiente
+
+Solutions conserva sus ocho categorías y su orden. Explore solutions usa `equipmentRoute`: 01 CCTV & Access, 02 Software, 03 Critical Power, 04 Gas Suppression, 05 Cabling & Fiber, 06 Precision Cooling, 07 Racks & Aisles y 08 Switching & Routing. `equipmentNumber` asigna un único número por equipo; ya no se reutiliza el número de la categoría en varios indicadores. Las tarjetas técnicas muestran su propio contenido y la consulta conserva el equipo seleccionado.
+
+Las tarjetas ajustan espaciado, tipografía y capacidades visibles al espacio disponible mediante `fitServicePanel`; no usan scroll. Verificados los ocho equipos y las ocho categorías en 320 × 568, y las tarjetas largas en 1024 × 560. Las flechas permanecen dentro de cada tarjeta.
+
+### Fondo ambiental de luz azul
+
+`assets/ambient-waves.mp4` es un bucle original de 16 s, 1280 × 720 a 24 fps, sin audio y de aproximadamente 720 KB. `assets/ambient-waves.css` lo combina con un fondo de estudio, con intensidad del 12 % en claro y 22 % en oscuro. `assets/ambient-waves-poster.jpeg` mantiene un fondo estático cuando se pausa, falla la reproducción o se solicita movimiento reducido. El video se carga después de estabilizar la escena, se pausa al ocultar la pestaña y conserva el mismo reproductor al cambiar de servicio.
+
+La fuente reproducible está en `tools/generate-ambient-waves.py` (numpy, Pillow y ffmpeg o imageio-ffmpeg). El sitio no requiere esas dependencias. Verificación: decodificación completa del MP4, ausencia de audio, reproducción y pausa en navegador, continuidad durante cambios de servicio y las 13 pruebas del recorrido.
+
+### Resaltado de la selección y casos de éxito
+
+El equipo seleccionado recibe una luz suave, un halo en la base y marcas discretas en las esquinas de su zona. Se atenúa ligeramente el entorno conservando sus materiales y nitidez; la oficina de Software y el edificio corporativo tienen materiales de enfoque independientes de la planta. La iluminación reutiliza el foco existente y no añade desenfoque ni bloom.
+
+Casos de éxito se oculta durante la selección y hasta que finaliza el cierre de la tarjeta. El recorrido cierra cualquier panel de casos abierto y el acceso vuelve a funcionar al regresar a la vista general. Verificados los ocho pasos, apertura/cierre de casos y móvil en ambos temas.
