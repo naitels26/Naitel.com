@@ -1,9 +1,9 @@
 // Official categories are separate from the eight existing equipment demonstrations.
 // Coordinates refer only to architecture and equipment already present in scene.js.
 export const serviceCategories = [
-  {id:'connectivity',code:'A',name:['Conectividad e infraestructura','Connectivity & Infrastructure'],short:['Conectividad','Connectivity'],zone:['Charolas, fibra y MDF','Cable trays, fiber & MDF'],index:3,production:true,color:'#227caa',
-    summary:['Conectividad empresarial desde el diseño de red hasta su implementación.','Business connectivity from network design through implementation.'],
-    capabilities:[['Cableado estructurado','Structured Cabling'],['Fibra óptica','Fiber Optics'],['Redes inalámbricas','Wireless Networks'],['Diseño e implementación de redes','Network Design & Implementation'],['Infraestructura de telecomunicaciones','Telecommunications Infrastructure']]},
+  {id:'connectivity',code:'A',name:['Cableado estructurado y conectividad','Structured Cabling & Connectivity'],short:['Cableado estructurado','Structured cabling'],zone:['Nuestra especialidad · cobre y fibra','Our specialty · copper & fiber'],index:3,color:'#227caa',
+    summary:['Cableado estructurado como base de tu operación: cobre, fibra y distribución organizada desde el rack hasta cada punto de red.','Structured cabling at the core of your operation: copper, fiber and organized distribution from the rack to every network outlet.'],
+    capabilities:[['Cableado estructurado de cobre','Structured copper cabling'],['Fibra óptica y distribución ODF','Fiber optics & ODF distribution'],['Racks, patch panels y organización','Racks, patch panels & cable management'],['Redes inalámbricas','Wireless networks'],['Diseño e implementación de redes','Network design & implementation']]},
   {id:'cybersecurity',code:'B',name:['Ciberseguridad y redes OT','Cybersecurity & OT Networks'],short:['Redes OT','OT networks'],zone:['Planta de producción','Production floor'],index:7,sceneZone:'production',color:'#3268ae',
     summary:['Segmentación y conectividad segura para redes empresariales e industriales.','Segmentation and secure connectivity for enterprise and industrial networks.'],
     capabilities:[['Segmentación de redes industriales','Industrial Network Segmentation'],['Segmentación de redes empresariales','Enterprise Network Segmentation'],['Integración de firewalls','Firewall Integration'],['Conectividad segura','Secure Connectivity'],['Continuidad operativa','Operational Continuity']],
@@ -27,7 +27,10 @@ export const serviceCategories = [
   {id:'consulting',code:'H',name:['Consultoría comercial','Commercial Consulting'],short:['Consultoría','Consulting'],zone:['Edificio corporativo · acceso','Corporate building · entrance'],index:7,sceneZone:'corporate',color:'#c46d35',
     summary:['Evaluación técnica personalizada para orientar los requerimientos de tu proyecto.','Personalized technical assessment to guide your project requirements.'],
     capabilities:[['Evaluación técnica personalizada','Personalized Technical Assessment'],['Consultoría técnica','Technical Consulting'],['Solicitud de consultoría','Consultation Request']],
-    note:['El diagnóstico técnico inicial no tiene costo. Su confirmación depende del equipo comercial.','The initial technical assessment is free of charge. Confirmation depends on the commercial team.']}
+    note:['El diagnóstico técnico inicial no tiene costo. Su confirmación depende del equipo comercial.','The initial technical assessment is free of charge. Confirmation depends on the commercial team.']},
+  {id:'collaboration',code:'I',name:['Salas de juntas y colaboración','Meeting Rooms & Collaboration'],short:['Salas de juntas','Meeting rooms'],zone:['Sala conectada · audio y video','Connected room · audio & video'],index:7,sceneZone:'meeting',color:'#397f95',
+    summary:['Equipamiento para salas de juntas que conecta a tu equipo, dentro y fuera de la oficina.','Meeting room equipment that connects your team, in the office and beyond.'],
+    capabilities:[['Pantallas y videoconferencia','Displays & video conferencing'],['Equipos de audio y colaboración','Audio & collaboration equipment'],['Integración y conectividad de la sala','Room integration & connectivity']]}
 ];
 export const categoryById = id => serviceCategories.find(category=>category.id===id);
 export const categoryForService = index => categoryById(['datacenters','datacenters','power','connectivity','connectivity','security','datacenters','software'][index]);
@@ -35,15 +38,16 @@ export const categoryStop = category => ({index:category.index,category:category
 // Clockwise through the existing campus, starting at the entrance and ending nearby.
 // Solutions and category-card arrows use this sequence. Numbered equipment and
 // Explore solutions use the independent equipmentRoute in content.js.
-export const serviceMapStops = ['security','consulting','engineering','cybersecurity','connectivity','datacenters','power','software'].map(id=>categoryStop(categoryById(id)));
+export const serviceMapStops = ['connectivity','security','consulting','engineering','collaboration','cybersecurity','datacenters','power','software'].map(id=>categoryStop(categoryById(id)));
 export function nextRouteStep(current,direction,count=serviceMapStops.length){
   if(current<0)return direction>0?0:count-1;
   return (current+direction+count)%count;
 }
 export const additionalHotspots = [
-  {category:'engineering',p:[-16.8,6.7,7]},
+  {category:'engineering',p:[-18.8,6.7,6.6]},
   {category:'consulting',p:[-18.2,1.8,10.8]},
-  {category:'cybersecurity',p:[-8.5,7.8,-6.5]}
+  {category:'cybersecurity',p:[-8.5,7.8,-6.5]},
+  {category:'collaboration',p:[-12.9,6.4,10]}
 ];
 
 export function initializeServiceMap({getSelection,getLanguage,pauseTour,closeMenu}){

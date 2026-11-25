@@ -5,7 +5,7 @@ export const services = [
 {id:'data',name:'Racks y pasillos',short:'Racks y pasillos',en:'Racks & aisles',position:[9,-2],label:[-1,2.8,0],description:'Gabinetes, contención y distribución según tu carga.',descriptionEn:'Cabinets, containment and layouts built around your load.',features:['Gabinetes y PDUs','Pasillos frío y caliente','Piso técnico y contención'],featuresEn:['Cabinets and PDUs','Cold and hot aisles','Raised floors and containment']},
 {id:'cooling',name:'Climatización de precisión',short:'Climatización',en:'Precision cooling',position:[16,-2],label:[0,.15,1.9],description:'Control térmico y flujo de aire para tu infraestructura crítica.',descriptionEn:'Thermal control and airflow for your critical infrastructure.',features:['Unidades InRow','Distribución de aire','Monitoreo ambiental'],featuresEn:['InRow units','Air distribution','Environmental monitoring']},
 {id:'power',name:'Energía crítica',short:'Energía crítica',en:'Critical power',position:[16,6],label:[0,.15,1.5],description:'Respaldo y distribución eléctrica para los equipos esenciales de tu operación.',descriptionEn:'Backup power and electrical distribution for your essential equipment.',features:['Sistemas UPS','Bancos de baterías','Distribución eléctrica'],featuresEn:['UPS systems','Battery banks','Power distribution']},
-{id:'fiber',name:'Cableado y fibra',short:'Cableado y fibra',en:'Cabling & fiber',position:[0,-2],label:[0,3.35,0],description:'Cobre y fibra, del diseño a la organización y documentación.',descriptionEn:'Copper and fiber, from design to organization and documentation.',features:['Charolas aéreas','Cobre y fibra óptica','Organización y documentación'],featuresEn:['Overhead cable trays','Copper and fiber optics','Organization and documentation']},
+{id:'fiber',name:'Cableado estructurado',short:'Cableado estructurado',en:'Structured cabling',position:[0,-2],label:[0,5,7],description:'Nuestra especialidad: cobre y fibra desde el rack hasta cada punto de red, con distribución y organización claras.',descriptionEn:'Our specialty: copper and fiber from the rack to every network outlet, with clear distribution and cable management.',features:['Racks y patch panels','Cobre, fibra óptica y ODF','Charolas y puntos de red'],featuresEn:['Racks and patch panels','Copper, fiber optics and ODF','Cable trays and network outlets']},
 {id:'network',name:'Switches y routers',short:'Switches y routers',en:'Switching & routing',position:[9,-5],label:[0,.15,1.3],description:'Redes segmentadas y conectividad para los sistemas de tu operación.',descriptionEn:'Segmented networks and connectivity for your operational systems.',features:['Rack de comunicaciones MDF','Switching y routing','Patch panels y segmentación'],featuresEn:['MDF communications rack','Switching and routing','Patch panels and segmentation']},
 {id:'security',name:'CCTV y accesos',short:'CCTV y accesos',en:'CCTV & access',position:[-3,9],label:[0,.15,1.4],description:'Visibilidad y control de acceso integrados a tus espacios críticos.',descriptionEn:'Visibility and access control integrated into your critical spaces.',features:['Videovigilancia IP','Lectores y torniquetes','Gestión de accesos'],featuresEn:['IP video surveillance','Readers and turnstiles','Access management']},
 {id:'fire',name:'Supresión con agente limpio',short:'Agente limpio',en:'Gas suppression',position:[16,-8],label:[0,.15,2.2],description:'Detección y supresión con agente limpio para cuartos críticos.',descriptionEn:'Clean agent detection and suppression for critical rooms.',features:['Cilindros de agente limpio','Tubería y boquillas','Detección y supervisión'],featuresEn:['Clean agent cylinders','Piping and nozzles','Detection and supervision']},
@@ -60,7 +60,7 @@ export const panelSummaries = {
   data:['Gabinetes, contención y distribución eléctrica.','Racks, containment and power distribution.'],
   cooling:['Climatización de precisión y monitoreo ambiental.','Precision cooling and environmental monitoring.'],
   power:['Respaldo eléctrico para equipos críticos.','Backup power for critical equipment.'],
-  fiber:['Cableado de cobre y fibra organizado.','Organized copper and fiber connectivity.'],
+  fiber:['Cableado estructurado, racks, patch panels y fibra óptica.','Structured cabling, racks, patch panels and fiber optics.'],
   network:['Redes segmentadas, switching y routing.','Segmented networks, switching and routing.'],
   security:['Videovigilancia y control de accesos integrados.','Integrated video surveillance and access control.'],
   fire:['Detección y supresión con agente limpio.','Clean agent detection and fire suppression.'],
@@ -78,7 +78,7 @@ solutions:['Soluciones','Solutions'],eyebrow:['INFRAESTRUCTURA QUE CONECTA TODO'
 caption:['Integramos redes e infraestructura para mantener tu operación conectada.','We integrate networks and infrastructure to keep your operations connected.'],
 prototype:['PROTOTIPO INTERACTIVO','INTERACTIVE PROTOTYPE'],
 solution:['SOLUCIÓN INTEGRADA','INTEGRATED SOLUTION'],quote:['Preguntar en el chatbot','Ask in chatbot'],back:['Volver','Back'],chat:['Asistente','Assistant'],
-loading:['INTEGRANDO POSIBILIDADES','INTEGRATING POSSIBILITIES'],brandDetail:['INFRAESTRUCTURA TECNOLÓGICA','TECHNOLOGY INFRASTRUCTURE'],
+loading:['INTEGRANDO POSIBILIDADES','INTEGRATING POSSIBILITIES'],introNetwork:['REDES · FIBRA ÓPTICA · INFRAESTRUCTURA','NETWORKS · FIBER OPTICS · INFRASTRUCTURE'],brandDetail:['INFRAESTRUCTURA TECNOLÓGICA','TECHNOLOGY INFRASTRUCTURE'],
 skip:['Ir a los servicios','Skip to services'],home:['NAITEL, volver al inicio','NAITEL, back to overview'],navigation:['Navegación principal','Main navigation'],
 experience:['Explorador interactivo de soluciones','Interactive solutions explorer'],scene:['Site de infraestructura 3D de NAITEL','NAITEL 3D infrastructure site'],
 serviceIndex:['Navegación de servicios','Service navigation'],exploreServices:['Explorar servicios','Explore services'],allServices:['Todos los servicios','All services'],
@@ -86,7 +86,7 @@ accessibleTitle:['Soluciones de infraestructura tecnológica','Technology infras
 pause:['Pausar animaciones','Pause animations'],resume:['Reanudar animaciones','Resume animations'],light:['Activar modo claro','Switch to light mode'],dark:['Activar modo oscuro','Switch to dark mode'],
 previous:['Servicio anterior','Previous service'],next:['Servicio siguiente','Next service'],close:['Cerrar','Close'],
 fallbackTitle:['Explora nuestras soluciones','Explore our solutions'],fallback:['La vista 3D no está disponible. Usa los ocho servicios de abajo.','The 3D view is unavailable. Use the eight services below.'],
-pageTitle:['NAITEL — Soluciones de infraestructura','NAITEL — Infrastructure solutions'],pageDescription:['Explora ocho soluciones de infraestructura tecnológica de NAITEL en un site 3D interactivo.','Explore eight NAITEL technology infrastructure solutions in an interactive 3D site.'],
+pageTitle:['NAITEL — Soluciones de infraestructura','NAITEL — Infrastructure solutions'],pageDescription:['Explora cableado estructurado, fibra óptica, salas de juntas y soluciones de TI en el site 3D de NAITEL.','Explore structured cabling, fiber optics, meeting rooms and IT solutions in NAITEL’s interactive 3D site.'],
 chatTitle:['NAITEL — Hablemos de tu proyecto.','NAITEL — Let’s talk about your project.'],chatStatus:['CHAT DE EJEMPLO','DEMO CHAT'],
 chatNote:['Demo local. No envía ni almacena datos.','Local demo. No data is sent or stored.'],chatMessage:['Tu mensaje','Your message'],
 chatPlaceholder:['Escribe tu consulta…','Type your question…'],send:['Enviar mensaje','Send message'],
@@ -100,6 +100,10 @@ typing:['Preparando respuesta…','Preparing a response…'],chatError:['No se p
 Object.assign(translations,{caption:["Redes e infraestructura que mantienen tu operación conectada.","Networks and infrastructure that keep your operation connected."],heroSupport:["Consultoría, ingeniería, integración y soporte para tus proyectos de TI.","Consulting, engineering, integration and support for your IT projects."],consultation:["Solicitar consultoría","Request a consultation"],exploreSolutions:["Explorar soluciones","Explore solutions"],serviceTags:["Servicios","Services"],products:["Marcas / Productos","Brands / Products"],brandsTitle:["Partners","Partners"],quote:["Solicitar cotización","Request a quote"],chatTitle:["Naitel AI","Naitel AI"],chatStatus:["En línea · demo","Online · demo"],pageTitle:["Naitel | Redes e infraestructura","Naitel | Networks and infrastructure"]});
 
 /* Contacto y asistente conectado; pares ES / EN. */
+Object.assign(translations,{
+  featuredCabling:['Conoce el cableado estructurado','Discover structured cabling'],
+  heroSupport:['Especialistas en cableado estructurado, fibra óptica e integración de TI.','Specialists in structured cabling, fiber optics and IT integration.']
+});
 Object.assign(translations,{
 contactLink:['Contáctanos','Contact us'],contactEyebrow:['CONECTEMOS TU PROYECTO','LET’S CONNECT'],contactTitle:['Cuéntanos qué necesitas','Tell us about your project'],contactDescription:['Comparte tu idea o los retos de tu empresa. Empecemos a definir la solución.','Share your idea or your business challenges. Let’s start defining the solution.'],
 contactName:['Nombre completo *','Full name *'],contactCompany:['Empresa','Company'],contactEmail:['Correo electrónico *','Email *'],contactPhone:['Teléfono','Phone'],contactService:['Servicio de interés *','Service *'],contactLocation:['Ciudad / ubicación del proyecto','City / project location'],contactChoose:['Selecciona un servicio','Select a service'],contactMessage:['¿Qué necesitas? *','What do you need? *'],contactPlaceholder:['Cuéntanos el alcance, capacidad aproximada y fechas deseadas…','Tell us about the scope, approximate capacity and target dates…'],
@@ -308,5 +312,13 @@ export const catalogServices = [
     "target": 7,
     "summary": "ERP, CRM y aplicaciones de checklist para revisiones CTPAT, con módulos e integraciones definidos por proyecto.",
     "summaryEn": "Custom ERP, CRM and CTPAT checklist applications, with project-specific modules and integrations."
+  },
+  {
+    "id": "catalog-collaboration",
+    "name": "Equipamiento para salas de juntas",
+    "en": "Meeting room equipment",
+    "target": 7,
+    "summary": "Equipamiento de audio, video y colaboración para salas de juntas, con integración y conectividad según las necesidades del espacio.",
+    "summaryEn": "Audio, video and collaboration equipment for meeting rooms, with integration and connectivity suited to the space."
   }
 ];

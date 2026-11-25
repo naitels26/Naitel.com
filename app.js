@@ -191,7 +191,9 @@ document.addEventListener('keydown',e=>{
 function updateServiceNavigation(){
   $('#prev-service').disabled=false;$('#next-service').disabled=false;
   $('#current-number').textContent=selected<0?'—':number(routeStep);
+  $('#service-total').textContent=String(officialSelection?routeStops.length:equipmentRoute.length).padStart(2,'0');
 }
+$('#featured-cabling').addEventListener('click',()=>openService(3,{category:'connectivity'}));
 
 /* 03 — Máquina de escribir cancelable; el subtítulo espera a la última letra. */
 function typeTitle(animate=true){
@@ -201,13 +203,6 @@ function typeTitle(animate=true){
   gsap.set(caret,{opacity:1});document.querySelector('.hero-heading').dataset.typing='writing';
   if(reduced||!animate){title.textContent=word;finish();return;}
   titleTimeline=gsap.timeline({onComplete:finish});[...word].forEach((_,i)=>titleTimeline.call(()=>{title.textContent=word.slice(0,i+1);},null,i*.021));titleTimeline.to({},{duration:.1});
-}
-function setLoadProgress(value){
-  const overlay=$('.intro');if(!overlay)return;
-  const progress=Math.max(Number(overlay.dataset.progress||0),Math.min(100,Math.round(value)));
-  overlay.dataset.progress=progress;overlay.setAttribute('aria-valuenow',String(progress));
-  $('#load-number').textContent=String(progress).padStart(2,'0');
-  $('.load-line i').style.transform='scaleX('+progress/100+')';
 }
 // Optional assets and GPU initialization must not hold the whole page behind the loader.
 async function waitForStartup(task,timeout){
@@ -221,18 +216,40 @@ async function intro(){
   const skip=()=>{skipped=true;assembly?.progress(1);};
   overlay?.addEventListener('click',skip);document.addEventListener('keydown',skip,{once:true});
   const ready=await waitForStartup(sceneReady,15000);
-  if(ready)setLoadProgress(100);
-  else{
+  if(!ready){
     $('.scene-fallback').hidden=false;
     console.warn('3D startup is taking too long; opening the page while it finishes.');
   }
-  if(!reduced&&!skipped)await new Promise(resolve=>setTimeout(resolve,Math.max(0,1500-(performance.now()-started))));
+  if(!reduced&&!skipped)await new Promise(resolve=>setTimeout(resolve,Math.max(0,900-(performance.now()-started))));
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   typeTitle(false);
-  await new Promise(resolve=>gsap.to(overlay,{opacity:0,duration:reduced?0:.25,onComplete:()=>{overlay?.remove();resolve();}}));
-  const stable=()=>{sceneStable=true;tour?.ready();performance.mark('naitel-scene-stable');applyMotionPreference();scene?.startDeferred().catch(error=>console.warn('Deferred scene',error));};
-  if(scene&&!reduced&&!skipped){assembly=scene.intro();assembly.eventCallback('onComplete',()=>{scene.assembling=false;scene.transitioning=false;stable();});}
-  else stable();
+  const stable=()=>{sceneStable=true;scene?.setRenderQuality();tour?.ready();performance.mark('naitel-scene-stable');applyMotionPreference();scene?.startDeferred().catch(error=>console.warn('Deferred scene',error));};
+  const revealScene=()=>{
+    scene?.present();
+    if(scene&&!reduced&&!skipped){assembly=scene.intro();assembly.eventCallback('onComplete',()=>{scene.assembling=false;scene.transitioning=false;stable();});}
+    else stable();
+  };
+  if(reduced||skipped){
+    await new Promise(resolve=>gsap.to(overlay,{opacity:0,duration:reduced?0:.12,onComplete:()=>{overlay?.remove();resolve();}}));
+    revealScene();
+  }else{
+    // The fiber becomes a scanning seam; both halves open onto the live scene.
+    await new Promise(resolve=>{
+      const transition=gsap.timeline({onComplete:()=>{overlay?.remove();revealScene();resolve();}});
+      transition.to('.intro-network',{opacity:0,y:6,duration:.18},0)
+        .to('.intro-brand',{opacity:0,scale:1.08,duration:.28,ease:'power2.in'},.06)
+        .to('.intro-fiber',{opacity:0,duration:.2},.12)
+        .fromTo('.intro-grid',{opacity:0},{opacity:.5,duration:.18},.06)
+        .to('.intro-grid',{opacity:0,scale:1.12,duration:.4},.24)
+        .fromTo('.intro-scan',{scaleX:0,opacity:0},{scaleX:1,opacity:1,duration:.22,ease:'power3.in'},.06)
+        .to('.intro-shutter-top',{yPercent:-100,duration:.7,ease:'power3.inOut'},.28)
+        .to('.intro-shutter-bottom',{yPercent:100,duration:.7,ease:'power3.inOut'},.28)
+        .to('.intro-scan-top',{y:()=>-innerHeight/2,duration:.7,ease:'power3.inOut'},.28)
+        .to('.intro-scan-bottom',{y:()=>innerHeight/2,duration:.7,ease:'power3.inOut'},.28)
+        .to('.intro-scan',{opacity:0,duration:.18},.8)
+        .fromTo('.header,.hero-heading',{opacity:0,y:10},{opacity:1,y:0,duration:.45,stagger:.08,ease:'power2.out',clearProps:'opacity,transform'},.55);
+    });
+  }
   introFinished=true;
   document.removeEventListener('keydown',skip);
 }
@@ -286,7 +303,7 @@ function openService(index,options={}){
   const switching=selected>=0;if(!switching)lastFocus=document.activeElement;
   $('.hero-heading').inert=true;selected=index;document.documentElement.style.setProperty('--service-tint',['#29b6f6','#57cbb8','#ed9b34','#26bbd4','#577cdb','#8768c7','#e56b43','#4d9aaf'][index]);document.body.classList.add('detail-open');
   updateServiceNavigation(index);
-  const consoleLine=$('.link-console');consoleLine.textContent=t('linkEstablished')+' · '+number(routeStep)+' / 08';gsap.killTweensOf(consoleLine);gsap.timeline().fromTo(consoleLine,{opacity:0,y:5},{opacity:1,y:0,duration:reduced?0:.3,ease:'power3.out'}).to(consoleLine,{opacity:0,y:-4,duration:reduced?0:.5,delay:1.7,ease:'power2.in'});
+  const consoleLine=$('.link-console');consoleLine.textContent=t('linkEstablished')+' · '+number(routeStep)+' / '+String(officialSelection?routeStops.length:equipmentRoute.length).padStart(2,'0');gsap.killTweensOf(consoleLine);gsap.timeline().fromTo(consoleLine,{opacity:0,y:5},{opacity:1,y:0,duration:reduced?0:.3,ease:'power3.out'}).to(consoleLine,{opacity:0,y:-4,duration:reduced?0:.5,delay:1.7,ease:'power2.in'});
   fillPanel(index);scene?.select(index,cameraOptions);switchVideo(services[index].video||config.ambientVideo);
   panelTimeline?.kill();gsap.killTweensOf(panel);panel.inert=false;panel.setAttribute('aria-hidden','false');gsap.set(panel,{xPercent:0,yPercent:0,visibility:'visible'});
   const d=(reduced||paused)?.18:.36;panelTimeline=gsap.timeline();
@@ -486,19 +503,18 @@ mapUI=initializeServiceMap({getSelection:()=>({category:selectedCategory,index:s
 observeBrandTypography();
 gsap.set(chat,{visibility:'hidden',opacity:0});setLanguage('en',{animate:false});updateServiceNavigation();initializeNetworkUI();
 const sceneReady=(async()=>{
-  setLoadProgress(2);
   await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
-  await waitForStartup(document.fonts.load('16px "Euronism D3"').catch(()=>{}),1200);
-  setLoadProgress(6);return import('./scene.js');
+  // The brand font is already preloaded; WebGL does not depend on its download.
+  return import('./scene.js');
 })().then(async m=>{
   try{
-    scene=await m.InfrastructureScene.create($('#scene'),{onSelect:openService,onNavigate:navigateRoute,reduced,onProgress:setLoadProgress});
+    scene=await m.InfrastructureScene.create($('#scene'),{onSelect:openService,onNavigate:navigateRoute,reduced});
     scene.paused=paused;scene.reduced=reduced||paused;
     if(document.documentElement.dataset.theme==='dark')scene.setTheme(true);
     $('.scene-fallback').hidden=true;
     setLanguage(language,{animate:false});performance.mark('naitel-first-frame');
     // A slow scene can become available after the loader has already released the page.
-    if(introFinished){tour?.ready();applyMotionPreference();scene.startDeferred().catch(error=>console.warn('Deferred scene',error));}
+    if(introFinished){scene.present();tour?.ready();applyMotionPreference();scene.startDeferred().catch(error=>console.warn('Deferred scene',error));}
     return scene;
   }catch(error){console.warn('3D scene unavailable:',error);$('.scene-fallback').hidden=false;return null;}
 }).catch(error=>{console.warn('3D scene unavailable:',error);$('.scene-fallback').hidden=false;return null;});

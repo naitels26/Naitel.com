@@ -1,5 +1,17 @@
 # NAITEL — Prototipo actualizado
 
+## Nitidez y protagonismo del cableado (25/11/2026)
+
+El conjunto de cableado es 28% más grande y ocupa el frente del campus. Su indicador destaca la especialidad; el título principal conserva «Redes e infraestructura que mantienen tu operación conectada». Los patch panels tienen jacks con cavidad, conectores y cordones; las curvas de tubos y piezas redondas incorporan más segmentos. Los rótulos usan texturas de mayor resolución y filtrado anisotrópico.
+
+La resolución se reduce durante los desplazamientos y se recupera al terminar: el acercamiento usa al menos 2× y la vista general entre 1.5× y 2× según el equipo. Se elimina la reducción permanente a 1×. Al enfocar el cableado se retiran los demás equipos de la vista; vuelven al cerrar el detalle. La animación de entrada conserva su composición.
+
+## Cableado estructurado destacado y salas de juntas (25/11/2026)
+
+El cableado estructurado ocupa una zona central con racks abiertos, patch panels de cobre, distribución de fibra ODF, charolas y tomas RJ45. El acceso directo del inicio y la primera opción de Soluciones abren un acercamiento a estos equipos. La vista general conserva las rutas del campus; el acercamiento muestra los ramales locales sin que las rutas generales oculten los paneles. Los destellos son discretos, espaciados y respetan la pausa y el movimiento reducido.
+
+El edificio corporativo incorpora una sala de juntas con pantallas, barra de videoconferencia, micrófonos y control de mesa. Tiene indicador, categoría, encuadre y contexto de contacto propios en ES/EN. Soluciones contiene ahora nueve categorías; el recorrido de equipamiento mantiene sus ocho paradas. El catálogo público generado también incluye salas de juntas. Esta sección sustituye las referencias históricas a ocho categorías o a la ausencia de equipos de sala.
+
 ## Menú Soluciones con ocho estaciones (24/11/2026)
 
 El menú Solutions/Soluciones muestra únicamente las ocho estaciones del modelo 3D, en el mismo orden del recorrido: CCTV y accesos, Desarrollo de software, Racks y pasillos, Switches y routers, Climatización de precisión, Energía crítica, Supresión con agente limpio y Cableado y fibra. Comparte los nombres ES/EN y la selección con el explorador 3D; cada opción abre el panel del servicio correspondiente. Esta actualización sustituye las referencias históricas al menú de 24 entradas.

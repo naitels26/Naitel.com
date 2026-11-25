@@ -1,4 +1,7 @@
 import {accessCycle} from './assets/operation-cycle.mjs';
+import {roundedCableCurve} from './assets/cable-route.mjs';
+import {buildStructuredCabling,buildMeetingRoom} from './assets/featured-equipment.mjs';
+import {renderRatio} from './assets/render-quality.mjs';
 import {RoundedBoxGeometry} from './vendor/three-addons/geometries/RoundedBoxGeometry.js';
 import {RoomEnvironment} from './vendor/three-addons/environments/RoomEnvironment.js';
 import * as THREE from './vendor/three.module.js';
@@ -7,8 +10,8 @@ import {additionalHotspots,categoryById,categoryStop} from './service-map.js';
 
 /* 01 — Geometrías compartidas. Todo el equipamiento es procedural. */
 const BOX = new RoundedBoxGeometry(1,1,1,1,.025);
-const CYL = new THREE.CylinderGeometry(1,1,1,20);
-const SPHERE = new THREE.SphereGeometry(1,20,12);
+const CYL = new THREE.CylinderGeometry(1,1,1,32);
+const SPHERE = new THREE.SphereGeometry(1,32,20);
 const UP = new THREE.Vector3(0,1,0);
 const MATERIAL_GRAY = new THREE.Color();
 const SELECTION_GLOW = new THREE.Color('#68baff');
@@ -23,8 +26,8 @@ const idleTask=()=>new Promise(resolve=>{
 const tubeGeometries=new Map();
 const M = {};
 const material = (color,extra={}) => new THREE.MeshStandardMaterial({color,roughness:.5,metalness:.2,...extra});
-M.cableBlue=material('#1266df',{emissive:'#073c89',emissiveIntensity:.35,roughness:.48,metalness:.1});
-M.cableOrange=material('#f05d12',{emissive:'#8e2805',emissiveIntensity:.35,roughness:.65,metalness:.05});
+M.cableBlue=material('#246caa',{emissive:'#12395b',emissiveIntensity:.12,roughness:.4,metalness:.22});
+M.cableOrange=material('#bd784a',{emissive:'#58341e',emissiveIntensity:.12,roughness:.46,metalness:.18});
 M.white=material('#f5f7fc',{roughness:.7,metalness:.05});M.navy=material('#18385d');M.dark=material('#0a1d32',{roughness:.83,metalness:.08});M.silver=material('#b8c8d5',{metalness:.55});M.blue=material('#517897');M.orange=material('#c95b2d');M.cyan=material('#52d9fa',{emissive:'#29b6f6',emissiveIntensity:1.3});M.green=material('#83ebca',{emissive:'#5ff2b3',emissiveIntensity:1});M.screen=material('#102e4d',{roughness:.2,metalness:.35});
 function box(parent,w,h,d,x,y,z,mat=M.white){if(parent.userData.layout){w*=SPACING;d*=SPACING;x*=SPACING;z*=SPACING;}const mesh=new THREE.Mesh(BOX,mat);mesh.scale.set(w,h,d);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;}
 function cylinder(parent,r,h,x,y,z,mat=M.silver){const mesh=new THREE.Mesh(CYL,mat);mesh.scale.set(r,h,r);mesh.position.set(x,y,z);mesh.castShadow=true;parent.add(mesh);return mesh;}
@@ -33,11 +36,16 @@ function pipe(parent,points,r=.025,mat=M.cyan){
   const vectors=points.map(p=>new THREE.Vector3(...p)),origin=vectors[0];
   const local=vectors.map(p=>p.clone().sub(origin));
   const key=r+':'+local.map(p=>p.toArray().map(v=>v.toFixed(5)).join(',')).join(';');
-  if(!tubeGeometries.has(key))tubeGeometries.set(key,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(local),40,r,6,false));
+  if(!tubeGeometries.has(key))tubeGeometries.set(key,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(local),64,r,8,false));
   const mesh=new THREE.Mesh(tubeGeometries.get(key),mat);mesh.position.copy(origin);mesh.userData.pipeOrigin=origin.clone();mesh.castShadow=true;parent.add(mesh);
   return {mesh,curve:new THREE.CatmullRomCurve3(vectors)};
 }
 function rod(parent,a,b,r,mat){const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),v=bv.clone().sub(av);const m=cylinder(parent,r,v.length(),...av.clone().add(bv).multiplyScalar(.5).toArray(),mat);m.quaternion.setFromUnitVectors(UP,v.normalize());return m;}
+function cable(parent,points,r,mat){
+  const curve=roundedCableCurve(THREE,points);
+  const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.min(192,Math.max(48,Math.ceil(curve.getLength()*3))),r,10,false),mat);
+  parent.add(mesh);return {mesh,curve};
+}
 function vent(parent,x,y,z,w=.5,rows=8){for(let i=0;i<rows;i++)box(parent,w,.025,.025,x,y+i*.085,z,M.dark);}
 
 /* 02 — Un solo site: pasillos, servicios perimetrales y recorridos compartidos. */
@@ -101,8 +109,9 @@ const builders=[
     // Independent bridge linking production to the data center.
     for(const z of [-.35,.35])pipe(g,[[-7,3.8,z],[0,3.8,z],[8,3.8,z]],.045,M.silver);
     for(let x=-7;x<=8;x+=.55)box(g,.06,.06,.75,x,3.76,0,M.silver);
-    for(let j=0;j<6;j++){const z=j*.105-.2625;a.fibers.push(pipe(g,[[-9,1.2,z],[-7,3.85,z],[7,3.85,z],[9,2.6,z]],.04,j<3?M.cableBlue:M.cableOrange));}
+    for(let j=0;j<6;j++){const z=j*.085-.2125;a.fibers.push(cable(g,[[-9,1.2,z],[-9,3.85,z],[9,3.85,z],[9,2.6,z]],.027,j<3?M.cableBlue:M.cableOrange));}
     for(const x of [-7,7])rod(g,[x,.1,0],[x,3.75,0],.06,M.silver);
+    const hub=buildStructuredCabling(g,a,{THREE,M,box,cylinder,sphere,cable});hub.scale.setScalar(1.28);
   },
   (g,a)=>{
     rack(g,a,-.65,0,0,true);rack(g,a,.65,0,0,true);
@@ -149,7 +158,7 @@ export class InfrastructureScene {
   constructor(container,{onSelect,onHover,onNavigate,reduced=false}={}){
     this.onNavigate=onNavigate;
     this.container=container;this.onSelect=onSelect;this.onHover=onHover;this.reduced=reduced;this.paused=reduced;this.selected=-1;this.hovered=-1;this.objects=[];this.paths=[];this.pickables=[];this.clock=new THREE.Clock();this.time=0;this.pointer=new THREE.Vector2(-10,-10);this.parallax={x:0,y:0};this.lowPower=(navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)<=4;this.raycaster=new THREE.Raycaster();this.lookAt=new THREE.Vector3(0,0,0);this.cameraState={x:21,y:23,z:27,tx:0,ty:0,tz:0,fov:34};
-    this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(Math.max(devicePixelRatio,1.5),2));this.renderer.shadowMap.enabled=false;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;this.renderer.setClearColor(0x000000,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.3;container.prepend(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-hidden','true');
+    this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,this.lowPower?1.25:1.5));this.renderer.shadowMap.enabled=false;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;this.renderer.setClearColor(0x000000,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.3;container.prepend(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-hidden','true');
     this.scene=new THREE.Scene();this.camera=new THREE.PerspectiveCamera(34,1,.1,600);this.world=new THREE.Group();this.scene.add(this.world);this.ambient=new THREE.HemisphereLight(0xebf6ff,0x8a9cb3,2.7);this.scene.add(this.ambient);this.key=new THREE.DirectionalLight(0xfff7ed,4.4);this.key.position.set(-8,15,8);this.key.castShadow=false;this.key.shadow.mapSize.set(2048,2048);Object.assign(this.key.shadow.camera,{left:-24,right:24,top:24,bottom:-24,near:1,far:75});this.key.shadow.bias=-.0005;this.key.shadow.normalBias=.035;this.key.shadow.radius=4;this.scene.add(this.key);this.fill=new THREE.DirectionalLight(0x83d8ff,1.5);this.fill.position.set(8,7,-9);this.scene.add(this.fill);
     // Keep one focus light in the initial shader configuration: selection does not add lights.
     this.focusLight=new THREE.SpotLight(0xb3ddff,0,40,Math.PI/5,.8,2);this.focusLight.position.set(0,12,0);this.focusLight.target=this.world;this.world.add(this.focusLight);
@@ -158,18 +167,28 @@ export class InfrastructureScene {
     this.key.shadow.mapSize.set(1024,1024);
     onProgress(12);await nextFrame();this.buildPlatform();this.instanceStatic(this.platform,{});
     onProgress(22);await nextFrame();await this.buildServices(onProgress);
-    this.buildAmbientZones();this.buildContactShadows();this.buildConnections();this.buildZoneLabels();this.setupFocusRenderer();onProgress(76);await nextFrame();
+    this.buildAmbientZones();await nextFrame();
+    this.buildContactShadows();this.buildConnections();await nextFrame();
+    this.buildZoneLabels();this.setupFocusRenderer();onProgress(76);await nextFrame();
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(this.container);this.resize();this.bind();
+    this.sharpenTextures(this.scene);
     onProgress(82);await this.renderer.compileAsync(this.scene,this.camera);await nextFrame();
-    this.applyCamera();this.renderer.shadowMap.needsUpdate=true;this.renderer.render(this.scene,this.camera);
-    onProgress(96);await nextFrame();this.running=!document.hidden;this.loop();
+    this.applyCamera();this.renderer.shadowMap.needsUpdate=true;this.renderFrame();
+    onProgress(96);await nextFrame();this.running=false;this.presented=false;this.clock.stop();
     document.addEventListener('visibilitychange',()=>{
       if(document.hidden){cancelAnimationFrame(this.frameRequest);this.running=false;this.clock.stop();this.container.dataset.renderState='suspended';}
-      else if(!this.running){this.running=true;this.clock.start();this.container.dataset.renderState='running';this.loop();}
+      else if(this.presented&&!this.running){this.running=true;this.clock.start();this.container.dataset.renderState='running';this.loop();}
     });
-    this.container.dataset.renderState=this.running?'running':'suspended';
+    this.container.dataset.renderState='prepared';
     document.documentElement.dataset.firstFrameMs=Math.round(performance.now());
     this.publishCamera();onProgress(100);
+  }
+  present(){
+    // Keep the compiled first frame still while the HTML shutters are moving.
+    if(this.presented)return;
+    this.presented=true;this.running=!document.hidden;
+    this.container.dataset.renderState=this.running?'running':'suspended';
+    if(this.running){this.clock.start();this.loop();}
   }
   applyCamera(){
     const s=this.cameraState;this.camera.position.set(s.x,s.y,s.z);this.camera.lookAt(s.tx,s.ty,s.tz);this.camera.fov=s.fov;this.camera.updateProjectionMatrix();this.camera.updateMatrixWorld();
@@ -214,11 +233,18 @@ export class InfrastructureScene {
   }
   preparePart(part,index){part.userData.base=part.position.clone();part.userData.explode=new THREE.Vector3();}
   prepareMaterials(root,o,index){
+    this.sharpenTextures(root);
     const materials=new Map();root.traverse(mesh=>{
       if(!mesh.isMesh)return;mesh.userData.service=index;if(index===3)mesh.userData.zone=true;this.pickables.push(mesh);
       const convert=source=>{if(!materials.has(source.uuid)){const m=source.clone();m.userData.baseOpacity=m.opacity;m.userData.baseColor=m.color.clone();m.userData.baseEmissive=m.emissiveIntensity||0;materials.set(source.uuid,m);}return materials.get(source.uuid);};
       mesh.material=Array.isArray(mesh.material)?mesh.material.map(convert):convert(mesh.material);
     });o.materials.push(...materials.values());
+  }
+  sharpenTextures(root){
+    const anisotropy=Math.min(8,this.renderer.capabilities.getMaxAnisotropy());
+    root.traverse(node=>{for(const material of [].concat(node.material||[]))for(const key of ['map','normalMap','roughnessMap','emissiveMap']){
+      const texture=material[key];if(texture&&texture.anisotropy!==anisotropy){texture.anisotropy=anisotropy;texture.needsUpdate=true;}
+    }});
   }
 
   buildDataCenter(g){
@@ -230,7 +256,7 @@ export class InfrastructureScene {
   }
   setupFocusRenderer(){
     this.focusEffect={amount:0};this.focusMembers=[];
-    this.contextFocus=[{zone:'software',group:this.softwareOffice},{zone:'corporate',group:this.corporateOffice}].map(entry=>{
+    this.contextFocus=[{zone:'software',group:this.softwareOffice},{zone:'corporate',group:this.corporateOffice},{zone:'meeting',group:this.meetingRoom}].map(entry=>{
       const materials=new Map();
       entry.group.traverse(mesh=>{
         if(!mesh.isMesh)return;
@@ -267,8 +293,10 @@ export class InfrastructureScene {
     const zone=this.selectionOptions?.sceneZone;
     let group=focused.group,width=focused.hit.scale.x,depth=focused.hit.scale.z;
     this.focusOffset.copy(focused.hit.position);this.focusOffset.y=0;
+    if(this.selected===3&&!this.selectionOptions?.production){this.focusOffset.set(-.38,0,7);width=12;depth=4.5;}
     if(this.selected===7&&!this.selectionOptions?.production){
-      if(zone==='corporate'){group=this.corporateOffice;width=9.5;depth=5.5;}
+      if(zone==='meeting'){group=this.meetingRoom;width=7.4;depth=4.5;}
+      else if(zone==='corporate'){group=this.corporateOffice;width=9.5;depth=5.5;}
       else if(zone==='production'){width=21.5;depth=16.5;}
       else{group=this.softwareOffice;width=6.4;depth=5.2;}
       this.focusOffset.set(0,0,0);
@@ -313,13 +341,9 @@ export class InfrastructureScene {
       const open=this.focusMembers.includes(i)?1:0;
       door.rotation.y=THREE.MathUtils.damp(door.rotation.y,-open*1.25,3,dt);
     }
-    let visiblePulses=0;
     for(const path of this.paths){
       const active=this.selected===3||this.selected===path.owner||(this.selected===0&&path.owner===4);
-      path.mesh.material.emissiveIntensity=active?.8:.25;
-      for(const [j,dot] of (path.pulses||[]).entries()){
-        dot.visible=active&&visiblePulses++<1;dot.position.copy(path.curve.getPointAt((t*(active?.035:.015)+path.phase+j/(path.pulses.length))%1));dot.scale.setScalar(path.pulseRadius||.14);
-      }
+      path.mesh.material.emissiveIntensity=active?path.peakGlow:path.baseGlow;
     }
   }
   buildProduction(g){
@@ -426,7 +450,7 @@ export class InfrastructureScene {
       box(office,9,2.7,.08,0,y+1.4,-2.35,M.glass);
       for(const x of [-4.45,4.45])box(office,.08,2.7,4.7,x,y+1.4,0,M.glass);
       box(office,9,.13,4.8,0,y+2.9,0,level?M.glass:M.navy);
-      for(const x of [-2.5,1.1]){
+      for(const x of level?[]:[-2.5,1.1]){
         box(office,2.1,.09,.85,x,y+.95,-.45,M.silver);
         for(const dx of [-.85,.85])box(office,.08,.9,.65,x+dx,y+.45,-.45,M.navy);
         box(office,.85,.55,.08,x,y+1.35,-.7,M.navy);
@@ -441,6 +465,8 @@ export class InfrastructureScene {
     box(office,2,.08,.6,0,.02,2.7,M.navy);
     // Architectural context only: it adds no new stop to the approved tour.
     this.instanceStatic(office,{});
+    this.meetingRoom=buildMeetingRoom(this.world,{THREE,M,box,cylinder,sphere,cable});
+    this.instanceStatic(this.meetingRoom,{});
   }
   animateAmbient(t){
     for(const s of this.codeScreens){
@@ -453,9 +479,11 @@ export class InfrastructureScene {
     }
   }
   buildZoneLabels(){
-    this.zoneLabels=[{es:'Centro de datos',en:'Data center',index:0,p:[9,5.3,-2]},{es:'Cableado',en:'Cabling',index:3,p:[0,4.5,-2]},{es:'Acceso',en:'Access',index:5,p:[-3,3.5,9]}].map(zone=>{
+    this.zoneLabels=[{es:'Centro de datos',en:'Data center',index:0,p:[9,5.3,-2]},{es:'Cableado estructurado',en:'Structured cabling',index:3,p:[-.2/SPACING,5.6,4.2/SPACING]},{es:'Acceso',en:'Access',index:5,p:[-3,3.5,9]}].map(zone=>{
       const label=document.createElement('button');label.className='object-label campus-label';label.innerHTML='<span class="label-name"></span>';label.addEventListener('click',()=>this.onSelect(zone.index,{zone:true}));document.querySelector('#labels').append(label);return {...zone,label};
     });
+    this.zoneLabels.find(zone=>zone.index===3).label.classList.add('cabling-feature-label');
+    const specialty=document.createElement('span');specialty.className='label-subtitle';this.zoneLabels.find(zone=>zone.index===3).label.append(specialty);
     for(const zone of [{es:'Desarrollo de software',en:'Software development',index:7,p:[10/SPACING,3.3,6.5/SPACING]}]){
       const label=document.createElement('button');label.className='object-label campus-label support-label';label.innerHTML='<span class="label-name"></span>';
       label.addEventListener('click',()=>this.onSelect(zone.index));document.querySelector('#labels').append(label);this.zoneLabels.push({...zone,label});
@@ -472,11 +500,12 @@ export class InfrastructureScene {
     }
     // One shared line envelope per existing zone; no extra equipment or lights.
     this.mapEnvelopes={};
-    for(const [zone,center,size] of [['corporate',[-15,3.2,8],[9.6,6.4,5.4]],['production',[-12.6,3.5,-2.8],[21.5,7.3,16.5]],['software',[10,1.8,6.5],[6.4,3.4,5.2]]]){
+    for(const [zone,center,size] of [['corporate',[-15,3.2,8],[9.6,6.4,5.4]],['meeting',[-15,4.7,8],[7.5,3.1,4.7]],['production',[-12.6,3.5,-2.8],[21.5,7.3,16.5]],['software',[10,1.8,6.5],[6.4,3.4,5.2]]]){
       const frame=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(...size)),new THREE.LineBasicMaterial({color:0x4c91b5,transparent:true,opacity:0,depthWrite:false}));frame.position.set(...center);this.world.add(frame);this.mapEnvelopes[zone]=frame;
     }
     this.corporateOffice.traverse(mesh=>{if(mesh.isMesh){mesh.userData.service=7;mesh.userData.category='engineering';this.pickables.push(mesh);}});
     this.softwareOffice.traverse(mesh=>{if(mesh.isMesh){mesh.userData.service=7;mesh.userData.category='software';this.pickables.push(mesh);}});
+    this.meetingRoom.traverse(mesh=>{if(mesh.isMesh){mesh.userData.service=7;mesh.userData.category='collaboration';this.pickables.push(mesh);}});
     // Existing overview labels now preview the same areas as selecting them.
     for(const zone of this.zoneLabels.filter(zone=>!zone.category)){
       const category=categoryById(({0:'datacenters',3:'connectivity',5:'security',7:'software'})[zone.index]);
@@ -486,6 +515,7 @@ export class InfrastructureScene {
     this.setLanguage(document.documentElement.lang);
   }
   setLanguage(language){
+    const subtitle=this.zoneLabels?.find(zone=>zone.index===3)?.label.querySelector('.label-subtitle');if(subtitle)subtitle.textContent=language==='es'?'Nuestra especialidad · cobre y fibra':'Our specialty · copper & fiber';
     for(const zone of this.zoneLabels||[]){zone.label.querySelector('.label-name').textContent=language==='es'?zone.es:zone.en;zone.label.setAttribute('aria-label',zone.category?categoryById(zone.category).name[language==='es'?0:1]:language==='es'?zone.es:zone.en);}
     const locale=language==='es'?0:1;
     for(const [index,object] of this.objects.entries()){
@@ -504,7 +534,7 @@ export class InfrastructureScene {
     this.highlightMapZone(category?.sceneZone||(category?.id==='software'?'software':null));
   }
   highlightMapZone(zone){for(const [name,frame] of Object.entries(this.mapEnvelopes||{}))gsap.to(frame.material,{opacity:name===zone ? .45 : 0,duration:this.reduced?0:.25,overwrite:true});}
-  updateZoneLabels(){for(const zone of this.zoneLabels||[]){const point=new THREE.Vector3(zone.p[0]*SPACING,zone.p[1],zone.p[2]*SPACING).applyMatrix4(this.world.matrixWorld).project(this.camera);zone.label.style.transform=`translate(${(point.x*.5+.5)*this.container.clientWidth}px,${(-point.y*.5+.5)*this.container.clientHeight}px) translate(-50%,-100%)`;zone.label.hidden=this.selected>=0||point.z>1;}}
+  updateZoneLabels(){for(const zone of this.zoneLabels||[]){const point=new THREE.Vector3(zone.p[0]*SPACING,zone.p[1],zone.p[2]*SPACING).applyMatrix4(this.world.matrixWorld).project(this.camera);zone.label.style.transform=`translate(${(point.x*.5+.5)*this.container.clientWidth}px,${(-point.y*.5+.5)*this.container.clientHeight+(this.mobile&&zone.category==='collaboration'?-52:0)}px) translate(-50%,-100%)`;zone.label.hidden=this.selected>=0||point.z>1;}}
 
   buildPlatform(){
     this.platform=new THREE.Group();this.platform.userData.layout=true;this.world.add(this.platform);
@@ -605,28 +635,40 @@ export class InfrastructureScene {
   }
   buildConnections(){
     // Every visible run belongs to a continuous campus network, including the entrance.
-    const service=this.objects[3],root=new THREE.Group();root.userData.structure=true;service.equipment.add(root);
+    const service=this.objects[3],root=new THREE.Group();root.userData.structure=true;service.equipment.add(root);this.campusCabling=root;
     const origin=service.base;
+    const flashCanvas=document.createElement('canvas');flashCanvas.width=64;flashCanvas.height=64;
+    const ctx=flashCanvas.getContext('2d'),glow=ctx.createRadialGradient(32,32,0,32,32,30);
+    glow.addColorStop(0,'#ffffff');glow.addColorStop(.12,'#e0f6ff');glow.addColorStop(.32,'#a6dcff90');glow.addColorStop(1,'#8bcfff00');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,64,64);
+    const streak=ctx.createLinearGradient(6,0,58,0);streak.addColorStop(0,'#ffffff00');streak.addColorStop(.5,'#f3fcff');streak.addColorStop(1,'#ffffff00');
+    ctx.fillStyle=streak;ctx.fillRect(6,30.5,52,3);ctx.save();ctx.translate(32,32);ctx.rotate(Math.PI/2);ctx.scale(.65,1);ctx.fillRect(-26,-1,52,2);ctx.restore();
+    const flashTexture=new THREE.CanvasTexture(flashCanvas);
+    const makeFlash=(parent,color,featured=false)=>{const dot=new THREE.Sprite(new THREE.SpriteMaterial({map:flashTexture,color,transparent:true,depthWrite:false,depthTest:!featured,blending:featured?THREE.AdditiveBlending:THREE.NormalBlending,toneMapped:false}));dot.scale.set(.22,.22,1);dot.renderOrder=featured?5:0;dot.visible=false;parent.add(dot);return dot;};
     const run=(owner,worldPoints)=>{
       const points=worldPoints.map(([x,y,z])=>[x-origin.x,y-origin.y,z-origin.z]);
       // Two clearly separated cable bundles follow the same existing containment.
       // Offset across the run, including corners, rather than along its tangent.
-      for(const [lane,offset,source,color] of [[0,-.115,M.cableBlue,'#9ad8ff'],[1,.115,M.cableOrange,'#ffd0a1']]){
+      for(const [lane,offset,source,color] of [[0,-.085,M.cableBlue,'#d9f0ff'],[1,.085,M.cableOrange,'#ffe6ca']]){
         const cablePoints=points.map(([x,y,z],index)=>{
           const previous=points[Math.max(0,index-1)],next=points[Math.min(points.length-1,index+1)];
           const dx=next[0]-previous[0],dz=next[2]-previous[2],length=Math.hypot(dx,dz);
           return [x-(length?dz/length:0)*offset,y+.04,z+(length?dx/length:1)*offset];
         });
-        const route=pipe(root,cablePoints,.07,source.clone());
-        const dot=sphere(root,.08,0,0,0,new THREE.MeshBasicMaterial({color,toneMapped:false}));
-        this.paths.push({...route,pulses:[dot],pulseRadius:.08,dot,owner,phase:owner*.11+lane*.2,baseGlow:.35,peakGlow:.8});
+        const route=cable(root,cablePoints,.038,source.clone());
+        const dot=makeFlash(root,color);
+        this.paths.push({...route,pulses:[dot],dot,owner,phase:(this.paths.length*.381966)%1,baseGlow:.12,peakGlow:.42});
       }
       // Paired rails and ladder rungs make the physical containment readable.
-      for(const offset of [-.23,.23])pipe(root,points.map(([x,y,z])=>[x,y-.14,z+offset]),.045,M.silver);
-      const trayCurve=new THREE.CatmullRomCurve3(points.map(point=>new THREE.Vector3(...point)));
-      const length=trayCurve.getLength(),steps=Math.ceil(length/.7);
-      for(let n=0;n<=steps;n++){const p=trayCurve.getPointAt(n/steps);box(root,.08,.06,.56,p.x,p.y-.16,p.z,M.silver);}
-      for(const [x,y,z] of worldPoints)if(y>2.8)rod(root,[x-origin.x,.1,z-origin.z],[x-origin.x,y-.1,z-origin.z],.055,M.silver);
+      const trayCurve=roundedCableCurve(THREE,points);
+      const length=trayCurve.getLength(),steps=Math.ceil(length/.85);
+      for(const offset of [-.2,.2]){
+        const railPoints=Array.from({length:steps+1},(_,i)=>{const p=trayCurve.getPointAt(i/steps),t=trayCurve.getTangentAt(i/steps),l=Math.hypot(t.x,t.z)||1;return [p.x-t.z/l*offset,p.y-.1,p.z+t.x/l*offset];});
+        pipe(root,railPoints,.025,M.silver);
+      }
+      for(let n=0;n<=steps;n++){const p=trayCurve.getPointAt(n/steps),t=trayCurve.getTangentAt(n/steps);if(Math.abs(t.y)>.5)continue;const rung=box(root,.045,.035,.43,p.x,p.y-.12,p.z,M.silver);rung.rotation.y=-Math.atan2(t.z,t.x);}
+      const supports=Math.max(1,Math.ceil(length/6));
+      for(let n=1;n<supports;n++){const p=trayCurve.getPointAt(n/supports),t=trayCurve.getTangentAt(n/supports);if(p.y>2.8&&Math.abs(t.y)<.15)rod(root,[p.x,.1,p.z],[p.x,p.y-.12,p.z],.035,M.silver);}
     };
     // Main ring: MDF → production → access → technical wing → MDF.
     run(7,[[12.6,2.8,-7],[12.6,3.85,-2.8],[-12.6,3.85,-2.8],[-12.6,1.2,1.4]]);
@@ -638,13 +680,15 @@ export class InfrastructureScene {
     // Shared entrance guide branches into the support rooms, then rejoins the MDF.
     run(5,[[-4.2,1.2,12.6],[-4.2,.3,10],[3,.3,10],[3,.3,8.6],[3,2.95,8.6],[3,2.95,4.2]]);
     run(7,[[3,2.95,4.2],[10,2.95,4.2],[10,2.95,6],[10,1.2,6]]);
+    run(3,[[3,2.95,4.2],[3,4.55,4.2],[2.69,4.55,4.2],[2.69,3.8,4.2]]);
     run(7,[[10,2.95,4.2],[12.6,3.4,4.2],[12.6,3.4,-7]]);
     // Corporate fiber branch continues the same physical tray from the access network.
     run(7,[[3,2.95,4.2],[-11.5,2.95,4.2],[-11.5,2.95,6.6],[-11.5,1.2,6.6]]);
     for(const z of [-5.1,-.5])run(0,[[12.6,3.4,-7],[12.6,3.4,z],[8.5,3.4,z],[8.5,2.6,z]]);
     for(const [owner,o] of this.objects.entries())for(const route of o.anim.fibers){
-      const pulses=Array.from({length:1},()=>sphere(o.equipment,.075,0,0,0,M.cyan));
-      this.paths.push({...route,pulses,pulseRadius:.075,dot:pulses[0],phase:owner*.13,owner,baseGlow:.35,peakGlow:.8});
+      const pulses=[makeFlash(route.mesh.parent,route.flashColor||'#e4f6ff',!!route.spark)];
+      if(route.flashSize)pulses[0].scale.set(route.flashSize,route.flashSize,1);
+      this.paths.push({...route,pulses,dot:pulses[0],phase:(this.paths.length*.381966)%1,owner,baseGlow:.12,peakGlow:.42});
     }
     this.instanceStatic(root,{fibers:this.paths,flow:this.paths.flatMap(p=>p.pulses.map(dot=>({dot})))});this.prepareMaterials(root,service,3);this.preparePart(root,0);
   }
@@ -670,6 +714,8 @@ export class InfrastructureScene {
         for(const o of this.objects){const center=o.base.clone().add(o.hit.position);this.overviewPoints.push(...this.boxCorners(new THREE.Box3().setFromCenterAndSize(center,o.hit.scale)));}
       }
       points=this.overviewPoints.map(p=>p.clone().applyAxisAngle(UP,rotation));
+    }else if(sceneZone==='meeting'){
+      points=this.boxCorners(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(-15,4.7,8),new THREE.Vector3(8,3.5,5)));
     }else if(sceneZone==='corporate'){
       points=this.boxCorners(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(-15,3.2,8),new THREE.Vector3(10,6.5,6)));
     }else if(sceneZone==='production'){
@@ -681,8 +727,8 @@ export class InfrastructureScene {
       // Show cabling above the working production hall as the final service.
       points=this.boxCorners(new THREE.Box3(new THREE.Vector3(-24,0,-13),new THREE.Vector3(5,8,9)));
     }else if(index===3){
-      // Cabling demonstrates the whole signal path, including both endpoints and access.
-      points=this.boxCorners(new THREE.Box3(new THREE.Vector3(-13.5,0,-12.5),new THREE.Vector3(23.5,4.5,13.5)));
+      // A dedicated close-up makes the panels, fiber distribution and endpoints readable.
+      points=this.boxCorners(new THREE.Box3(new THREE.Vector3(-6.5,.1,2),new THREE.Vector3(5.7,5.3,6.3)));
     }else{
       const o=this.objects[index],center=o.base.clone().add(o.hit.position);
       const size=o.hit.scale.clone().multiply(new THREE.Vector3(1.12,1.18,1.12));
@@ -768,9 +814,10 @@ export class InfrastructureScene {
     canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();this.pointer.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);this.parallax.x=this.pointer.x;this.parallax.y=this.pointer.y;if(e.pointerType==='mouse')this.needsPick=true;});
     canvas.addEventListener('pointerleave',()=>{this.pointer.set(-10,-10);this.parallax.x=0;this.parallax.y=0;this.previewCategory(null);});
     canvas.addEventListener('pointerdown',e=>{start={x:e.clientX,y:e.clientY};});
-    canvas.addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>48||Math.abs(dy)>48){this.onNavigate?.(Math.abs(dx)>Math.abs(dy)?(dx<0?1:-1):(dy<0?1:-1));return;}const r=canvas.getBoundingClientRect();this.pointer.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);this.raycaster.setFromCamera(this.pointer,this.camera);const hit=this.raycaster.intersectObjects(this.pickables.filter(m=>m.visible&&m.parent.visible))[0]||this.raycaster.intersectObjects(this.objects.map(o=>o.hit))[0];if(hit){const category=categoryById(hit.object.userData.category);this.onSelect(hit.object.userData.service,category?categoryStop(category):{zone:hit.object.userData.zone===true});}});
+    canvas.addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>48||Math.abs(dy)>48){this.onNavigate?.(Math.abs(dx)>Math.abs(dy)?(dx<0?1:-1):(dy<0?1:-1));return;}const r=canvas.getBoundingClientRect();this.pointer.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);this.raycaster.setFromCamera(this.pointer,this.camera);const hit=this.raycaster.intersectObjects(this.pickables.filter(m=>this.isVisible(m)))[0]||this.raycaster.intersectObjects(this.objects.filter(o=>o.equipment.visible).map(o=>o.hit))[0];if(hit){const category=categoryById(hit.object.userData.category);this.onSelect(hit.object.userData.service,category?categoryStop(category):{zone:hit.object.userData.zone===true});}});
   }
-  pick(){if(this.transitioning)return;this.raycaster.setFromCamera(this.pointer,this.camera);const hit=this.raycaster.intersectObjects(this.pickables.filter(m=>m.visible&&m.parent.visible))[0]||this.raycaster.intersectObjects(this.objects.map(o=>o.hit))[0];const category=categoryById(hit?.object.userData.category);if(category)this.previewCategory(category);else{this.hover(hit?hit.object.userData.service:-1);if(this.selected<0)this.highlightMapZone(null);}}
+  isVisible(mesh){for(let node=mesh;node;node=node.parent)if(!node.visible)return false;return true;}
+  pick(){if(this.transitioning)return;this.raycaster.setFromCamera(this.pointer,this.camera);const hit=this.raycaster.intersectObjects(this.pickables.filter(m=>this.isVisible(m)))[0]||this.raycaster.intersectObjects(this.objects.filter(o=>o.equipment.visible).map(o=>o.hit))[0];const category=categoryById(hit?.object.userData.category);if(category)this.previewCategory(category);else{this.hover(hit?hit.object.userData.service:-1);if(this.selected<0)this.highlightMapZone(null);}}
   updateMaterials(o){
     const amount=Math.max(o.focus.dim,o.focus.hoverDim||0);
     const shade=Math.max(o.focus.dim*.24,(o.focus.hoverDim||0)*.1);
@@ -810,6 +857,7 @@ export class InfrastructureScene {
     return {poses,positions,looks,stops:0};
   }
   select(index,options={}){
+    this.setRenderQuality(true);
     this.container.dataset.cameraTransition='moving';this.container.dataset.focusZone=options.sceneZone||'equipment';this.container.dataset.focusCategory=options.category||'';
     this.selectionOptions=options;
     if(this.assembling)this.introTimeline?.progress(1);
@@ -827,22 +875,30 @@ export class InfrastructureScene {
     if(walk)duration=Math.max(duration,1.6);
     this.container.dataset.cameraRoute=walk?'access-software-data-production':'direct';
     const progress={p:0};if(this.cameraFlight)this.cameraFlight.kill();
-    this.cameraFlight=gsap.timeline({onComplete:()=>{this.transitioning=false;this.container.dataset.cameraTransition='settled';options.onComplete?.();}})
+    this.cameraFlight=gsap.timeline({onComplete:()=>{this.transitioning=false;this.container.dataset.cameraTransition='settled';this.setRenderQuality();options.onComplete?.();}})
       .to(this.world.rotation,{y:0,z:0,duration,ease:'power2.inOut'},0)
       .to(progress,{p:1,duration,ease:'sine.inOut',onUpdate:()=>{const t=progress.p;if(walk){const p=walk.positions.getPoint(t),look=walk.looks.getPoint(t);Object.assign(state,{x:p.x,y:p.y,z:p.z,tx:look.x,ty:look.y,tz:look.z});const n=t*(walk.poses.length-1),i=Math.min(walk.poses.length-2,Math.floor(n)),v=THREE.MathUtils.smoothstep(n-i,0,1);state.fov=THREE.MathUtils.lerp(walk.poses[i].fov,walk.poses[i+1].fov,v);}else{for(const k of Object.keys(target))state[k]=THREE.MathUtils.lerp(start[k],target[k],t);}}},0);
     if(walk)this.cameraFlight.to(this.focusEffect,{amount:this.lowPower?.35:.55,duration:1,ease:'sine.inOut'},Math.max(0,duration-1));
-    const contextZone=index===7&&!options.production&&options.sceneZone!=='production'?(options.sceneZone==='corporate'?'corporate':'software'):null;
+    const contextZone=index===7&&!options.production&&options.sceneZone!=='production'?(options.sceneZone==='meeting'?'meeting':options.sceneZone==='corporate'?'corporate':'software'):null;
     this.objects.forEach((o,i)=>{const chosen=this.focusMembers.includes(i)&&index>=0,proxy=i===7&&!!contextZone;gsap.to(o.focus,{mix:chosen?1:0,dim:index>=0&&(!chosen||proxy)?1:0,duration:this.reduced?.15:1,ease:'power2.inOut',overwrite:true,onUpdate:()=>{this.updateMaterials(o);}});o.label.classList.toggle('is-selected',chosen);if(chosen){o.ripple.value=0;gsap.to(o.ripple,{value:1,duration:1.4,ease:'power3.out',overwrite:true});}});
     for(const context of this.contextFocus){const chosen=index>=0&&context.zone===contextZone;gsap.to(context.focus,{mix:chosen?1:0,dim:index>=0&&!chosen?1:0,duration:this.reduced?.15:1,ease:'power2.inOut',overwrite:true,onUpdate:()=>this.updateMaterials(context)});}
     return this.cameraFlight;
   }
   setTheme(dark){gsap.to(this.ambient,{intensity:dark?.9:2.7,duration:1,ease:'power2.inOut'});gsap.to(this.key,{intensity:dark?1.7:4.4,duration:1,ease:'power2.inOut'});gsap.to(this.fill,{intensity:dark?3:1.5,duration:1,ease:'power2.inOut'});gsap.to(this.renderer,{toneMappingExposure:dark?.9:1.3,duration:1,ease:'power2.inOut'});const target=new THREE.Color(dark?'#0b192d':'#12243a');const mat=this.deck.material;gsap.to(mat.color,{r:target.r,g:target.g,b:target.b,duration:1,ease:'power2.inOut'});}
   loop=()=>{
-    if(!this.running||document.hidden)return;this.frameRequest=requestAnimationFrame(this.loop);const dt=Math.min(this.clock.getDelta(),.05);
+    if(!this.running||document.hidden)return;
+    this.frameRequest=requestAnimationFrame(this.loop);this.renderFrame();
+  }
+  renderFrame(){
+    const dt=Math.min(this.clock.getDelta(),.05);
+    // Campus routing stays visible in overview; the equipment close-up shows its local runs.
+    this.campusCabling.visible=!(this.selected===3&&!this.selectionOptions?.production);
+    const cablingCloseup=this.selected===3&&!this.selectionOptions?.production;
+    this.objects.forEach((object,index)=>{object.equipment.visible=!cablingCloseup||index===3;});
     if(this.startupSample){const sample=this.startupSample,now=performance.now(),elapsed=now-sample.last;sample.last=now;sample.frames++;sample.total+=elapsed;sample.max=Math.max(sample.max,elapsed);if(elapsed>50)sample.over50ms++;
-      if(now-sample.start>=3000){this.container.dataset.startupMetrics=JSON.stringify({frames:sample.frames,fps:Number((sample.frames*1000/sample.total).toFixed(1)),maxFrameMs:Number(sample.max.toFixed(1)),over50ms:sample.over50ms});this.startupSample=null;}
+      if(now-sample.start>=3000){const fps=sample.frames*1000/sample.total;this.container.dataset.startupMetrics=JSON.stringify({frames:sample.frames,fps:Number(fps.toFixed(1)),maxFrameMs:Number(sample.max.toFixed(1)),over50ms:sample.over50ms});this.adaptResolution(fps);this.startupSample=null;}
     }
-    this.frameCount=(this.frameCount||0)+1;if(this.frameCount===90)this.sampleStart=performance.now();if(this.frameCount===210){const fps=120000/(performance.now()-this.sampleStart);this.measuredFPS=fps;document.documentElement.dataset.sampleFps=fps.toFixed(1);if(fps<35){this.lowPower=true;this.renderer.shadowMap.enabled=false;if(this.particles)this.particles.visible=false;}}
+    this.frameCount=(this.frameCount||0)+1;if(this.frameCount===90)this.sampleStart=performance.now();if(this.frameCount===210){const fps=120000/(performance.now()-this.sampleStart);this.measuredFPS=fps;document.documentElement.dataset.sampleFps=fps.toFixed(1);this.adaptResolution(fps);if(fps<35){this.lowPower=true;this.renderer.shadowMap.enabled=false;if(this.particles)this.particles.visible=false;}}
 if(!this.paused)this.time+=dt;const t=this.time;const idle=this.selected<0&&!this.transitioning&&!this.paused&&!this.reduced;
     if(!this.assembling){if(idle){this.world.position.y=0;this.world.rotation.y=0;}else this.world.position.y=THREE.MathUtils.lerp(this.world.position.y,0,.04);}
     const state=this.cameraState;const motion=false;this.camera.position.set(state.x+(motion?this.parallax.x*.25:0),state.y+(motion?this.parallax.y*.18:0),state.z);this.lookAt.set(state.tx,state.ty,state.tz);this.camera.lookAt(this.lookAt);this.camera.fov=state.fov;this.camera.updateProjectionMatrix();this.camera.updateMatrixWorld();
@@ -857,15 +913,37 @@ if(!this.paused)this.time+=dt;const t=this.time;const idle=this.selected<0&&!thi
       if(!this.paused&&this.focusMembers.includes(i)){o.anim.leds.forEach(({mesh,phase})=>{mesh.visible=Math.sin(t*2+phase*2.1)>-.65;});o.anim.air.forEach((a,j)=>{a.position.y=(a.userData.pipeOrigin?.y||0)+Math.sin(t*1.8+j)*.07;a.scale.y=.96+Math.sin(t*1.8+j)*.04;});if(o.anim.dome)o.anim.dome.rotation.y=Math.sin(t*.45)*.55;}
       if(!this.paused&&this.focusMembers.includes(i))for(const batch of o.anim.ledBatches||[]){let changed=false;for(const [index,item] of batch.items.entries()){const visible=Math.sin(t*2+item.phase*2.1)>-.65;if(visible===item.visible)continue;item.visible=visible;batch.mesh.setMatrixAt(index,visible?item.matrix:new THREE.Matrix4().makeScale(0,0,0));changed=true;}if(changed)batch.mesh.instanceMatrix.needsUpdate=true;}
       if(!this.paused&&this.focusMembers.includes(i))this.animateDetails?.(o,t*.35,true);
-      o.group.updateWorldMatrix(true,false);const point=(i===7&&!this.selectionOptions?.production?(this.selectionOptions?.sceneZone==='corporate'?this.corporateOffice.position.clone().add(new THREE.Vector3(0,6.4,0)):this.selectionOptions?.sceneZone==='production'?this.objects[7].base.clone().add(new THREE.Vector3(0,7.5,0)):this.softwareOffice.position.clone().add(new THREE.Vector3(0,3.1,0))).applyMatrix4(this.world.matrixWorld):new THREE.Vector3(services[i].label[0]*SPACING,services[i].label[1],services[i].label[2]*SPACING).applyMatrix4(o.group.matrixWorld)).project(this.camera);const x=(point.x*.5+.5)*this.container.clientWidth,y=(-point.y*.5+.5)*this.container.clientHeight;o.label.style.transform=`translate(${x}px,${y}px) translate(-50%,0)`;o.label.style.opacity=String(this.selected<0?1:(i===this.selected?1:0));o.label.style.pointerEvents=this.selected>=0&&i!==this.selected?'none':'auto';o.label.inert=this.selected>=0&&i!==this.selected;
+      o.group.updateWorldMatrix(true,false);const point=(i===7&&!this.selectionOptions?.production?(this.selectionOptions?.sceneZone==='meeting'?this.meetingRoom.position.clone().add(new THREE.Vector3(0,3,0)):this.selectionOptions?.sceneZone==='corporate'?this.corporateOffice.position.clone().add(new THREE.Vector3(0,6.4,0)):this.selectionOptions?.sceneZone==='production'?this.objects[7].base.clone().add(new THREE.Vector3(0,7.5,0)):this.softwareOffice.position.clone().add(new THREE.Vector3(0,3.1,0))).applyMatrix4(this.world.matrixWorld):new THREE.Vector3(services[i].label[0]*SPACING,services[i].label[1],services[i].label[2]*SPACING).applyMatrix4(o.group.matrixWorld)).project(this.camera);const x=(point.x*.5+.5)*this.container.clientWidth,y=(-point.y*.5+.5)*this.container.clientHeight;o.label.style.transform=`translate(${x}px,${y}px) translate(-50%,0)`;o.label.style.opacity=String(this.selected<0?1:(i===this.selected?1:0));o.label.style.pointerEvents=this.selected>=0&&i!==this.selected?'none':'auto';o.label.inert=this.selected>=0&&i!==this.selected;
       if(o.ripple.value>0&&o.ripple.value<1){const p=o.ripple.value;o.halo.scale.setScalar(1+p*.08);o.halo.material.opacity=(1-p)*.12;}else if(i===this.hovered){o.halo.scale.setScalar(1.01+Math.sin(t*2)*.008);}
     });
-    if(!this.paused){this.paths.forEach(p=>{const phase=(t*.13+p.phase)%1;const ease=phase<.5?2*phase*phase:1-Math.pow(-2*phase+2,2)/2;p.dot.position.copy(p.curve.getPoint(ease));});if(this.particles)this.particles.rotation.y=t*.008;}
+    let flashes=0,patchFlashes=0;
+    this.paths.forEach(p=>{
+      const featured=this.selected===3&&!!p.spark,patch=p.spark==='patch';
+      const speed=featured?(patch?.18:.22):.12,duty=featured?(patch?.18:.38):.12;
+      const phase=(t*speed+p.phase)%1,relevant=this.selected<0||this.selected===3||this.selected===p.owner;
+      // Hidden campus routes must not consume the close-up's sparkle budget.
+      const allowed=featured?(patch?patchFlashes<1:flashes<2):this.selected!==3&&!p.spark&&flashes<2;
+      const active=!this.paused&&relevant&&this.isVisible(p.mesh)&&phase<duty&&allowed;
+      p.dot.visible=active;
+      if(active){if(patch)patchFlashes++;else flashes++;const progress=phase/duty;p.dot.position.copy(p.curve.getPointAt(progress));p.dot.material.opacity=Math.sin(Math.PI*progress)*(featured?1:.65);}
+    });
+    this.container.dataset.cablingSparkles=String(this.selected===3?flashes+patchFlashes:0);
+    if(!this.paused&&this.particles)this.particles.rotation.y=t*.008;
     this.animateOperation(t,dt);
     this.animateAmbient(t);
     this.updateZoneLabels();
     this.updateSelectionAccent();
     this.renderScene();
+  }
+  adaptResolution(fps){
+    if(fps<28)this.lowPower=true;
+    this.setRenderQuality(this.assembling||this.transitioning);
+  }
+  setRenderQuality(moving=false){
+    const ratio=renderRatio({pixelRatio:devicePixelRatio||1,lowPower:this.lowPower,focused:this.selected>=0,moving});
+    if(Math.abs(this.renderer.getPixelRatio()-ratio)<.01)return;
+    this.renderer.setPixelRatio(ratio);this.renderer.setSize(this.container.clientWidth,this.container.clientHeight,false);
+    this.container.dataset.renderScale=String(ratio);
   }
   // Point d'extension / punto de carga futuro de GLB. Añade GLTFLoader de la
   // misma versión de Three.js y llama replaceEquipment(index, gltf.scene).

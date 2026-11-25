@@ -96,16 +96,20 @@ software. Desarrollo de software a medida / Custom software development
 ERP, CRM y aplicaciones de checklist para revisiones CTPAT, con módulos e integraciones definidos por proyecto.
 Custom ERP, CRM and CTPAT checklist applications, with project-specific modules and integrations.
 
+collaboration. Equipamiento para salas de juntas / Meeting room equipment
+Equipamiento de audio, video y colaboración para salas de juntas, con integración y conectividad según las necesidades del espacio.
+Audio, video and collaboration equipment for meeting rooms, with integration and connectivity suited to the space.
+
 CATEGORÍAS OFICIALES
 
-Conectividad e infraestructura / Connectivity & Infrastructure
-Conectividad empresarial desde el diseño de red hasta su implementación.
-Business connectivity from network design through implementation.
-Cableado estructurado / Structured Cabling
-Fibra óptica / Fiber Optics
-Redes inalámbricas / Wireless Networks
-Diseño e implementación de redes / Network Design & Implementation
-Infraestructura de telecomunicaciones / Telecommunications Infrastructure
+Cableado estructurado y conectividad / Structured Cabling & Connectivity
+Cableado estructurado como base de tu operación: cobre, fibra y distribución organizada desde el rack hasta cada punto de red.
+Structured cabling at the core of your operation: copper, fiber and organized distribution from the rack to every network outlet.
+Cableado estructurado de cobre / Structured copper cabling
+Fibra óptica y distribución ODF / Fiber optics & ODF distribution
+Racks, patch panels y organización / Racks, patch panels & cable management
+Redes inalámbricas / Wireless networks
+Diseño e implementación de redes / Network design & implementation
 
 Ciberseguridad y redes OT / Cybersecurity & OT Networks
 Segmentación y conectividad segura para redes empresariales e industriales.
@@ -169,6 +173,13 @@ Solicitud de consultoría / Consultation Request
 El diagnóstico técnico inicial no tiene costo. Su confirmación depende del equipo comercial.
 The initial technical assessment is free of charge. Confirmation depends on the commercial team.
 
+Salas de juntas y colaboración / Meeting Rooms & Collaboration
+Equipamiento para salas de juntas que conecta a tu equipo, dentro y fuera de la oficina.
+Meeting room equipment that connects your team, in the office and beyond.
+Pantallas y videoconferencia / Displays & video conferencing
+Equipos de audio y colaboración / Audio & collaboration equipment
+Integración y conectividad de la sala / Room integration & connectivity
+
 EQUIPAMIENTO DEL RECORRIDO
 
 Racks y pasillos / Racks & aisles
@@ -201,15 +212,15 @@ UPS systems
 Battery banks
 Power distribution
 
-Cableado y fibra / Cabling & fiber
-Cobre y fibra, del diseño a la organización y documentación.
-Copper and fiber, from design to organization and documentation.
-Charolas aéreas
-Cobre y fibra óptica
-Organización y documentación
-Overhead cable trays
-Copper and fiber optics
-Organization and documentation
+Cableado estructurado / Structured cabling
+Nuestra especialidad: cobre y fibra desde el rack hasta cada punto de red, con distribución y organización claras.
+Our specialty: copper and fiber from the rack to every network outlet, with clear distribution and cable management.
+Racks y patch panels
+Cobre, fibra óptica y ODF
+Charolas y puntos de red
+Racks and patch panels
+Copper, fiber optics and ODF
+Cable trays and network outlets
 
 Switches y routers / Switching & routing
 Redes segmentadas y conectividad para los sistemas de tu operación.

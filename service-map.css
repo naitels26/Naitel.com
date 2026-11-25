@@ -1,4 +1,21 @@
 /* One compact card, with its own navigation; Solutions contains only the route. */
+.hero-heading .hero-specialty{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin:12px 0 0;padding:9px 11px;border:1px solid #2a82b04d;border-radius:8px;color:var(--text);background:#2089bc0a;font:600 11px/1.4 Inter,sans-serif;text-align:left;cursor:pointer}
+.hero-heading .hero-specialty:hover{background:#2089bc19;border-color:#2a82b0}
+.hero-heading .hero-specialty:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+.hero-specialty>span:last-child{color:#2388b7;font-size:17px}
+.cabling-feature-label{display:grid!important;grid-template-columns:6px auto;column-gap:9px;row-gap:2px;padding:9px 13px!important;background:#123a59!important;color:#f0f9ff!important;border-color:#6db5d5!important;box-shadow:0 5px 20px #0b355b38!important;font-size:12px!important;font-weight:650!important}
+.cabling-feature-label .label-name{grid-column:2;grid-row:1;max-width:none;overflow:visible;color:#f0f9ff}
+.cabling-feature-label .label-subtitle{grid-column:2;grid-row:2;color:#b9daea;font:500 9px/1.3 Inter,sans-serif}
+.cabling-feature-label:before{display:block!important;grid-column:1;grid-row:1 / 3;align-self:center}
+.cabling-feature-label[hidden]{display:none!important}
+.cabling-feature-label:before{content:'';width:6px;height:6px;flex:none;border-radius:50%;background:#3d9bc2;box-shadow:0 0 0 3px #3d9bc218}
+#solutions-list button[data-category=connectivity]{font-weight:650;background:#2588af0b}
+@media(max-width:700px){
+  .hero-heading{max-height:min(260px,calc(100% - 48px))}
+  .hero-heading .hero-specialty{margin-top:9px;padding:7px 9px;font-size:10px}
+  body:not(.detail-open) #labels>.object-label:not(.campus-label),
+  body:not(.detail-open) #labels>.campus-label:not(.cabling-feature-label):not([data-category=collaboration]){display:none}
+}
 body.detail-open #success-stories-toggle{visibility:hidden;pointer-events:none}
 body.detail-open #success-stories-panel{visibility:hidden;pointer-events:none}
 .object-label.is-selected{border-color:#329df1;box-shadow:0 0 0 3px #329df11f}
