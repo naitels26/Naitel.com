@@ -8,7 +8,7 @@ const scrim=document.querySelector('.privacy-scrim');let inertBefore=[];
 const brands=[['Genetec','Hoffman','AMD','SanDisk','Honeywell','CyberPower','HUAWEI','Lenovo','QNAP','Synology','H3C','ASUS'],['Azure','Microsoft','AWS','CPI','HPE','Aruba','Belden','CommScope','Panduit','Logitech','Samsung','Rittal']];
 const marquees=[];let activePrivacyLanguage='es',privacyCache={};
 const partnerLevels={Axis:'Gold Partner',Panduit:'Gold Partner',Cisco:'Certified Partner',Fortinet:'Advocate Partner',Belden:'Certified Partner',CommScope:'Certified Partner','Schneider Electric':'Certified Partner',Genetec:'Certified Partner',Milestone:'Certified Partner',Microsoft:'Partner'};
-const partnerAssets={Axis:{src:'assets/certifications/01-axis-200x128.jpeg'},Milestone:{src:'assets/certifications/10-milestone-200x128.jpeg'}};
+const partnerAssets={Axis:{src:'assets/certifications/01-axis-200x128.jpeg',themeRaster:true},Milestone:{src:'assets/certifications/10-milestone-200x128.jpeg',themeRaster:true}};
 let activePartner=null,diploma,closeTimer;
 function ribbonLabel(){
   document.querySelector('#brands-title').textContent=document.documentElement.lang==='es'?'Marcas y alianzas':'Brands and partners';

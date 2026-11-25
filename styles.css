@@ -995,4 +995,13 @@ main{overflow:clip}
 .brands-ribbon .ribbon-face .brands-group .partner-port{width:116px;flex-basis:116px;margin-inline:6px}
 .brands-ribbon .ribbon-face .brands-group .partner-port[data-expanded=true]{background:transparent}
 [data-theme=dark] .brands-ribbon .partner-port[data-expanded=true] .brand-port{background:transparent}
-[data-theme=dark] .brands-ribbon .partner-port[data-expanded=true] .brand-port[data-white-source=true] .brand-art .brand-logo-light{filter:brightness(0)}
+[data-theme=dark] .brands-ribbon .partner-port[data-expanded=true] .brand-port[data-white-source=true] .brand-art .brand-logo-light{filter:brightness(0) invert(1)}
+/* Theme-safe partner artwork: retain accent colors and lift only dark lettering. */
+[data-theme=dark] :is(.brands-ribbon,.service-brands) .brand-port[data-dark-logo=true] .brand-art .brand-logo-light{opacity:0!important}
+[data-theme=dark] :is(.brands-ribbon,.service-brands) .brand-port[data-dark-logo=true] .brand-art .brand-logo-dark{display:block!important;opacity:1!important;filter:none!important}
+/* Diplomas always use their light paper artwork, independently of page theme. */
+.partner-diploma .brand-art .brand-logo-dark{display:none!important;opacity:0!important}
+[data-theme=dark] .partner-diploma .brand-port[data-dark-logo=true] .brand-art .brand-logo-light{display:block;opacity:1!important}
+
+/* Keep every ribbon logo on the same transparent surface. */
+[data-theme=dark] :is(.brands-ribbon,.service-brands) .brand-port,[data-theme=dark] .brands-ribbon .ribbon-face .brand-art:has(img[src*="certifications"]){background:transparent!important}

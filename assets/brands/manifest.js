@@ -1,18 +1,45 @@
 export default {
-  "Schneider Electric":{"file":"schneiderelectric.svg","monochrome":true},
-  "Siemens":{"file":"siemens.svg","monochrome":true},
-  "Bosch":{"file":"bosch.svg","monochrome":true},
-  "Cisco":{"file":"cisco.svg","monochrome":true},
-  "Fortinet":{"file":"fortinet.svg","monochrome":true},
-  "Siemon":{"file":"siemon.png"},
-  "Kidde":{"file":"kidde.svg"},
+  "Schneider Electric": {
+    "file": "schneiderelectric.svg",
+    "monochrome": true,
+    "darkFile": "schneiderelectric-dark.svg"
+  },
+  "Siemens": {
+    "file": "siemens.svg",
+    "monochrome": true,
+    "darkFile": "siemens-dark.svg"
+  },
+  "Bosch": {
+    "file": "bosch.svg",
+    "monochrome": true,
+    "darkFile": "bosch-dark.svg"
+  },
+  "Cisco": {
+    "file": "cisco.svg",
+    "monochrome": true,
+    "darkFile": "cisco-dark.svg"
+  },
+  "Fortinet": {
+    "file": "fortinet.svg",
+    "monochrome": true,
+    "darkFile": "fortinet-dark.svg"
+  },
+  "Siemon": {
+    "file": "siemon.png",
+    "themeRaster": true
+  },
+  "Kidde": {
+    "file": "kidde.svg",
+    "themeRaster": true
+  },
   "Genetec": {
     "file": "genetec.svg",
     "color": "#173d66",
     "placeholder": false,
     "monochrome": true,
     "whiteSource": true,
-    "opticalHeight": 14
+    "opticalHeight": 14,
+    "darkFile": "genetec-dark.svg"
   },
   "Hoffman": {
     "file": "hoffman.svg",
@@ -20,7 +47,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 20
+    "opticalHeight": 20,
+    "darkFile": "hoffman-dark.svg"
   },
   "AMD": {
     "file": "amd.svg",
@@ -28,7 +56,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": true,
-    "opticalHeight": 13
+    "opticalHeight": 13,
+    "darkFile": "amd-dark.svg"
   },
   "SanDisk": {
     "file": "sandisk.svg",
@@ -52,7 +81,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": true,
-    "opticalHeight": 14
+    "opticalHeight": 14,
+    "darkFile": "cyberpower-dark.svg"
   },
   "HUAWEI": {
     "file": "huawei.png",
@@ -60,7 +90,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 18
+    "opticalHeight": 18,
+    "themeRaster": true
   },
   "Lenovo": {
     "file": "lenovo.svg",
@@ -68,7 +99,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 16
+    "opticalHeight": 16,
+    "darkFile": "lenovo-dark.svg"
   },
   "QNAP": {
     "file": "qnap.svg",
@@ -76,7 +108,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": false,
-    "opticalHeight": 13
+    "opticalHeight": 13,
+    "darkFile": "qnap-dark.svg"
   },
   "Synology": {
     "file": "synology.svg",
@@ -84,7 +117,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": false,
-    "opticalHeight": 16
+    "opticalHeight": 16,
+    "themeRaster": true
   },
   "H3C": {
     "file": "h3c.png",
@@ -92,7 +126,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 15
+    "opticalHeight": 15,
+    "themeRaster": true
   },
   "ASUS": {
     "file": "asus.svg",
@@ -100,7 +135,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": false,
-    "opticalHeight": 13
+    "opticalHeight": 13,
+    "darkFile": "asus-dark.svg"
   },
   "Azure": {
     "file": "azure.svg",
@@ -108,7 +144,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 18
+    "opticalHeight": 18,
+    "darkFile": "azure-dark.svg"
   },
   "Microsoft": {
     "file": "microsoft.png",
@@ -116,7 +153,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 17
+    "opticalHeight": 17,
+    "themeRaster": true
   },
   "AWS": {
     "file": "aws.svg",
@@ -124,7 +162,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 20
+    "opticalHeight": 20,
+    "darkFile": "aws-dark.svg"
   },
   "CPI": {
     "file": "cpi.svg",
@@ -132,7 +171,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 18
+    "opticalHeight": 18,
+    "darkFile": "cpi-dark.svg"
   },
   "HPE": {
     "file": "hpe.svg",
@@ -140,7 +180,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 16
+    "opticalHeight": 16,
+    "darkFile": "hpe-dark.svg"
   },
   "Aruba": {
     "file": "aruba.png",
@@ -148,7 +189,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 19
+    "opticalHeight": 19,
+    "themeRaster": true
   },
   "Belden": {
     "file": "belden.png",
@@ -156,7 +198,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 14
+    "opticalHeight": 14,
+    "themeRaster": true
   },
   "CommScope": {
     "file": "commscope.svg",
@@ -164,7 +207,8 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 19
+    "opticalHeight": 19,
+    "darkFile": "commscope-dark.svg"
   },
   "Panduit": {
     "file": "panduit.svg",
@@ -172,7 +216,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": false,
-    "opticalHeight": 14
+    "opticalHeight": 14,
+    "darkFile": "panduit-dark.svg"
   },
   "Logitech": {
     "file": "logitech.svg",
@@ -188,7 +233,8 @@ export default {
     "placeholder": false,
     "monochrome": true,
     "whiteSource": false,
-    "opticalHeight": 13
+    "opticalHeight": 13,
+    "darkFile": "samsung-dark.svg"
   },
   "Rittal": {
     "file": "rittal.svg",
@@ -196,6 +242,7 @@ export default {
     "placeholder": false,
     "monochrome": false,
     "whiteSource": false,
-    "opticalHeight": 23
+    "opticalHeight": 23,
+    "darkFile": "rittal-dark.svg"
   }
 };
